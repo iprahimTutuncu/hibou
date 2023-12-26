@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="thsan">
+      <UniqueIdentifier>{23186D10-8F2C-95C1-58AE-3821C48191F2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\thsan.h" />
+    <ClInclude Include="src\thsan\core.h">
+      <Filter>thsan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\thsan\entry_point.h">
+      <Filter>thsan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\thsan\game.h">
+      <Filter>thsan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\thsan\window.h" />
+    <ClInclude Include="src\thsan\Input\key_code.h">
+      <Filter>thsan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\thsan\Input\keyboard.h">
+      <Filter>thsan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\openGL\gl_render_target.h" />
+    <ClInclude Include="src\thsan\graphics\render_target.h" />
+    <ClInclude Include="src\thsan\non_copyable.h" />
+    <ClInclude Include="src\thsan\graphics\graphic_api.h" />
+    <ClInclude Include="src\thsan\graphics\mesh.h" />
+    <ClInclude Include="src\thsan\graphics\shader.h" />
+    <ClInclude Include="src\platform\openGL\gl_shader.h" />
+    <ClInclude Include="src\thsan\graphics\render_command.h" />
+    <ClInclude Include="src\platform\openGL\gl_mesh.h" />
+    <ClInclude Include="src\thsan\graphics\render_manager.h" />
+    <ClInclude Include="src\platform\openGL\gl_helper.h" />
+    <ClInclude Include="src\thsan\graphics\vertex.h" />
+    <ClInclude Include="src\thsan\graphics\texture.h" />
+    <ClInclude Include="src\thsan\graphics\image.h" />
+    <ClInclude Include="src\platform\openGL\gl_texture2D.h" />
+    <ClInclude Include="src\thsan\graphics\render_states.h" />
+    <ClInclude Include="src\thsan\graphics\framebuffer.h" />
+    <ClInclude Include="src\platform\openGL\gl_framebuffer.h" />
+    <ClInclude Include="src\thsan\system\vector.h" />
+    <ClInclude Include="src\thsan\Input\Command.h" />
+    <ClInclude Include="src\thsan\Input\ControlSetting.h" />
+    <ClInclude Include="src\thsan\state\State.h" />
+    <ClInclude Include="src\thsan\Input\event.h" />
+    <ClInclude Include="src\platform\SDL\sdl_window.h" />
+    <ClInclude Include="src\tsm\math\camera\abstract_camera.h" />
+    <ClInclude Include="src\tsm\math\camera\free_camera.h" />
+    <ClInclude Include="src\tsm\math\transform.h" />
+    <ClInclude Include="src\tsm\tsm.h" />
+    <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\thsan\log.h" />
+    <ClInclude Include="src\platform\vulkan\vk_config.h" />
+    <ClInclude Include="src\platform\vulkan\vk_initializer.h" />
+    <ClInclude Include="src\platform\vulkan\vk_swapchain.h" />
+    <ClInclude Include="src\manager\log_manager.h" />
+    <ClInclude Include="src\thsan\graphics\tilemap.h" />
+    <ClInclude Include="src\thsan\graphics\drawable.h" />
+    <ClInclude Include="src\thsan\graphics\tilemap_impl.h" />
+    <ClInclude Include="src\thsan\graphics\view.h" />
+    <ClInclude Include="src\thsan\graphics\sprite_animation.h" />
+    <ClInclude Include="src\tsm\math\color.h" />
+    <ClInclude Include="src\thsan\graphics\Transformable.h" />
+    <ClInclude Include="src\ressource_manager\texture2D_manager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\thsan\game.cpp">
+      <Filter>thsan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\thsan\window.cpp" />
+    <ClCompile Include="src\thsan\Input\keyboard.cpp">
+      <Filter>thsan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\platform\openGL\gl_render_target.cpp" />
+    <ClCompile Include="src\thsan\graphics\graphic_api.cpp" />
+    <ClCompile Include="src\thsan\graphics\render_target.cpp" />
+    <ClCompile Include="src\thsan\graphics\mesh.cpp" />
+    <ClCompile Include="src\thsan\graphics\shader.cpp" />
+    <ClCompile Include="src\platform\openGL\gl_shader.cpp" />
+    <ClCompile Include="src\platform\openGL\gl_mesh.cpp" />
+    <ClCompile Include="src\thsan\graphics\render_command.cpp" />
+    <ClCompile Include="src\thsan\graphics\render_manager.cpp" />
+    <ClCompile Include="src\platform\openGL\gl_helper.cpp" />
+    <ClCompile Include="src\thsan\graphics\texture.cpp" />
+    <ClCompile Include="src\platform\openGL\gl_texture2D.cpp" />
+    <ClCompile Include="src\thsan\graphics\render_states.cpp" />
+    <ClCompile Include="src\thsan\graphics\framebuffer.cpp" />
+    <ClCompile Include="src\platform\openGL\gl_framebuffer.cpp" />
+    <ClCompile Include="src\thsan\graphics\vertex.cpp" />
+    <ClCompile Include="src\thsan\Input\ControlSetting.cpp" />
+    <ClCompile Include="src\thsan\state\State.cpp" />
+    <ClCompile Include="src\platform\SDL\sdl_window.cpp" />
+    <ClCompile Include="src\tsm\math\camera\free_camera.cpp" />
+    <ClCompile Include="src\tsm\math\transform.cpp" />
+    <ClCompile Include="src\pch.cpp" />
+    <ClCompile Include="src\platform\vulkan\vk_initializer.cpp" />
+    <ClCompile Include="src\platform\vulkan\vk_swapchain.cpp" />
+    <ClCompile Include="src\manager\log_manager.cpp" />
+    <ClCompile Include="src\thsan\graphics\tilemap.cpp" />
+    <ClCompile Include="src\thsan\graphics\tilemap_impl.cpp" />
+    <ClCompile Include="src\thsan\graphics\view.cpp" />
+    <ClCompile Include="src\thsan\graphics\sprite_animation.cpp" />
+    <ClCompile Include="src\tsm\math\color.cpp" />
+    <ClCompile Include="src\ressource_manager\texture2D_manager.cpp" />
+  </ItemGroup>
+</Project>

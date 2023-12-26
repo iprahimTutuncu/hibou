@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\platform\openGL\gl_framebuffer.h" />
+    <ClInclude Include="src\platform\openGL\gl_texture2D.h" />
+    <ClInclude Include="src\platform\SDL\sdl_window.h" />
+    <ClInclude Include="src\platform\vulkan\vk_config.h" />
+    <ClInclude Include="src\platform\vulkan\vk_initializer.h" />
+    <ClInclude Include="src\platform\vulkan\vk_swapchain.h" />
+    <ClInclude Include="src\manager\log_manager.h" />
+    <ClInclude Include="src\ressource_manager\texture2D_manager.h" />
+    <ClInclude Include="src\thsan\graphics\Transformable.h" />
+    <ClInclude Include="src\tsm\math\color.h" />
+    <ClInclude Include="src\thsan\graphics\drawable.h" />
+    <ClInclude Include="src\thsan\graphics\sprite_animation.h" />
+    <ClInclude Include="src\thsan\graphics\tilemap.h" />
+    <ClInclude Include="src\thsan\graphics\tilemap_impl.h" />
+    <ClInclude Include="src\thsan\graphics\view.h" />
+    <ClInclude Include="src\thsan\Input\ControlSetting.h" />
+    <ClInclude Include="src\platform\openGL\gl_helper.h" />
+    <ClInclude Include="src\thsan\graphics\framebuffer.h" />
+    <ClInclude Include="src\thsan\graphics\image.h" />
+    <ClInclude Include="src\thsan\graphics\mesh.h" />
+    <ClInclude Include="src\thsan\graphics\render_command.h" />
+    <ClInclude Include="src\thsan\graphics\render_manager.h" />
+    <ClInclude Include="src\thsan\graphics\render_states.h" />
+    <ClInclude Include="src\thsan\graphics\shader.h" />
+    <ClInclude Include="src\platform\openGL\gl_mesh.h" />
+    <ClInclude Include="src\platform\openGL\gl_render_target.h" />
+    <ClInclude Include="src\thsan\graphics\render_target.h" />
+    <ClInclude Include="src\thsan\graphics\graphic_api.h" />
+    <ClInclude Include="src\thsan\graphics\texture.h" />
+    <ClInclude Include="src\thsan\graphics\vertex.h" />
+    <ClInclude Include="src\thsan\Input\Command.h" />
+    <ClInclude Include="src\thsan\Input\event.h" />
+    <ClInclude Include="src\thsan\Input\keyboard.h" />
+    <ClInclude Include="src\thsan\Input\key_code.h" />
+    <ClInclude Include="src\thsan\log.h" />
+    <ClInclude Include="src\thsan\entry_point.h" />
+    <ClInclude Include="src\thsan\core.h" />
+    <ClInclude Include="src\thsan\game.h" />
+    <ClInclude Include="src\thsan.h" />
+    <ClInclude Include="src\thsan\non_copyable.h" />
+    <ClInclude Include="src\platform\openGL\gl_shader.h" />
+    <ClInclude Include="src\thsan\state\State.h" />
+    <ClInclude Include="src\thsan\system\vector.h" />
+    <ClInclude Include="src\thsan\window.h" />
+    <ClInclude Include="src\tsm\math\camera\abstract_camera.h" />
+    <ClInclude Include="src\tsm\math\camera\free_camera.h" />
+    <ClInclude Include="src\tsm\math\transform.h" />
+    <ClInclude Include="src\tsm\tsm.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\platform\openGL\gl_framebuffer.cpp" />
+    <ClCompile Include="src\platform\openGL\gl_helper.cpp" />
+    <ClCompile Include="src\platform\openGL\gl_texture2D.cpp" />
+    <ClCompile Include="src\platform\SDL\sdl_window.cpp" />
+    <ClCompile Include="src\platform\vulkan\vk_initializer.cpp" />
+    <ClCompile Include="src\platform\vulkan\vk_swapchain.cpp" />
+    <ClCompile Include="src\manager\log_manager.cpp" />
+    <ClCompile Include="src\ressource_manager\texture2D_manager.cpp" />
+    <ClCompile Include="src\tsm\math\color.cpp" />
+    <ClCompile Include="src\thsan\graphics\sprite_animation.cpp" />
+    <ClCompile Include="src\thsan\graphics\tilemap.cpp" />
+    <ClCompile Include="src\thsan\graphics\tilemap_impl.cpp" />
+    <ClCompile Include="src\thsan\graphics\view.cpp" />
+    <ClCompile Include="src\thsan\Input\ControlSetting.cpp" />
+    <ClCompile Include="src\thsan\game.cpp" />
+    <ClCompile Include="src\thsan\graphics\framebuffer.cpp" />
+    <ClCompile Include="src\thsan\graphics\mesh.cpp" />
+    <ClCompile Include="src\thsan\graphics\render_command.cpp" />
+    <ClCompile Include="src\thsan\graphics\render_manager.cpp" />
+    <ClCompile Include="src\thsan\graphics\render_states.cpp" />
+    <ClCompile Include="src\thsan\graphics\render_target.cpp" />
+    <ClCompile Include="src\thsan\graphics\shader.cpp" />
+    <ClCompile Include="src\platform\openGL\gl_mesh.cpp" />
+    <ClCompile Include="src\platform\openGL\gl_render_target.cpp" />
+    <ClCompile Include="src\thsan\graphics\graphic_api.cpp" />
+    <ClCompile Include="src\thsan\graphics\texture.cpp" />
+    <ClCompile Include="src\thsan\graphics\vertex.cpp" />
+    <ClCompile Include="src\thsan\Input\keyboard.cpp" />
+    <ClCompile Include="src\platform\openGL\gl_shader.cpp" />
+    <ClCompile Include="src\thsan\state\State.cpp" />
+    <ClCompile Include="src\thsan\window.cpp" />
+    <ClCompile Include="src\tsm\math\camera\free_camera.cpp" />
+    <ClCompile Include="src\tsm\math\transform.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{4f4887f5-9454-4232-9f2c-448becac7cc9}</ProjectGuid>
+    <RootNamespace>Thsan</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NOMINMAX;TS_PLATFORM_WINDOWS;TS_BUILD_DLL;TS_CONFIG_DEBUG;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\src\vendor\stb_image\include;$(SolutionDir)Thsan\src\vendor\glm\glm;$(SolutionDir)Thsan\src\vendor\glew-2.1.0-win32\glew-2.1.0\include;$(SolutionDir)Thsan\src\vendor\entt\include;$(SolutionDir)Thsan\src\vendor\sdl2\include;$(SolutionDir)Thsan\src\vendor\vulkan\include;$(SolutionDir)Thsan\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)Thsan\src\vendor\vulkan\lib;$(SolutionDir)Thsan\src\vendor\glew-2.1.0-win32\glew-2.1.0\lib\Release\x64;$(SolutionDir)Thsan\src\vendor\sdl2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>vulkan-1.lib;opengl32.lib;glew32.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\Thsan.dll" "$(SolutionDir)bin\$(Configuration)-$(Platform)\SandBox\" /Y /I
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NOMINMAX;TS_PLATFORM_WINDOWS;TS_BUILD_DLL;TS_CONFIG_RELEASE</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(SolutionDir)Thsan\src\vendor\stb_image\include;$(SolutionDir)Thsan\src\vendor\glm\glm;$(SolutionDir)Thsan\src\vendor\glew-2.1.0-win32\glew-2.1.0\include;$(SolutionDir)Thsan\src\vendor\entt\include;$(SolutionDir)Thsan\src\vendor\sdl2\include;$(SolutionDir)Thsan\src\vendor\spdlog\include;$(SolutionDir)Thsan\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(VULKAN_SDK)\Lib;$(SolutionDir)Thsan\src\vendor\glew-2.1.0-win32\glew-2.1.0\lib\Release\x64;$(SolutionDir)Thsan\src\vendor\sdl2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>vulkan-1.lib;opengl32.lib;glew32.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\Thsan.dll" "$(SolutionDir)bin\$(Configuration)-$(Platform)\SandBox\" /Y /I
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

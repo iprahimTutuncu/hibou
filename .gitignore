@@ -1,0 +1,6 @@
+# Visual Studio
+*.log
+*.tlog
+bin/
+bin-int/
+.vs/
