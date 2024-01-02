@@ -4,6 +4,7 @@
 #include <memory>
 #include <glm/vec4.hpp>
 #include <glm/vec2.hpp>
+#include "texture.h"
 
 //need to re-write an abstraction to remove this
 //attachement methode need to be absratcted to remove the GLEnum
@@ -16,14 +17,14 @@ namespace Thsan {
 	class THSAN_API Framebuffer
 	{
 	public:
-		Framebuffer() = default;
+		Framebuffer();
 		Framebuffer(uint32_t width, uint32_t height);
 		virtual ~Framebuffer() = default;
 
 		virtual void bind() = 0;
 		virtual void Unbind() = 0;
 
-		glm::uvec2 getSize() const;
+		glm::uvec2 getSize();
 
 		virtual void attachColorTarget(int attachmentIndex, TextureFormat format) = 0;
 		virtual void attachDepthStencilTarget() = 0;
@@ -34,7 +35,8 @@ namespace Thsan {
 		virtual std::shared_ptr<Texture2D> getDepthTexture() const = 0;
 
 	protected:
-		glm::uvec2 size;
+		uint32_t width;
+		uint32_t height;
 	};
 
 	THSAN_API std::shared_ptr<Framebuffer> create_framebuffer(uint32_t width = 0, uint32_t height = 0);

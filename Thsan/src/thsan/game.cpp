@@ -4,7 +4,6 @@
 #include "thsan/Input/keyboard.h"
 #include "SDL.h"
 #include "platform/SDL/sdl_window.h"
-#include "entt.hpp"
 
 #include <GL/glew.h>
 #include "thsan/graphics/render_target.h"
@@ -92,9 +91,10 @@ namespace Thsan {
 
 				if (isDebugUIEnable)
 					onUIRender();
+
+				window->swapBuffers();
 			}
 			//imgui specfific
-			window->swapBuffers();
 
 			std::this_thread::sleep_for(std::chrono::duration<double>(1.0 / targetFrameRate));
 		}

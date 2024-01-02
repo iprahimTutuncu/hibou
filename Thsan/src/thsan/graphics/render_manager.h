@@ -7,12 +7,10 @@
 namespace Thsan {
 	class RenderTarget;
 	class Framebuffer;
-
-	namespace renderCommands {
-		class RenderCommand;
-		class PushFramebuffer;
-		class PopFramebuffer;
-	};
+	class RenderContext;
+	class RenderStates2D;
+	class RenderStates3D;
+	class Drawable;
 
 	class THSAN_API RenderManager {
 	public:	
@@ -24,15 +22,12 @@ namespace Thsan {
 		virtual void clear() = 0;
 		virtual void setViewport(int x, int y, int w, int h) = 0;
 		virtual void setDefaultViewport(int x, int y, int w, int h) = 0;
-		virtual std::shared_ptr<Framebuffer> getActiveFramebuffer() = 0;
-		virtual void submit(std::unique_ptr<renderCommands::RenderCommand> rc) = 0;
-		virtual void flush() = 0;
-	protected:
-		virtual void pushFramebuffer(std::shared_ptr<Framebuffer> framebuffer) = 0;
-		virtual void popFramebuffer() = 0;
+		virtual void setState(std::shared_ptr<RenderStates2D> states) = 0;
+		virtual void setState(std::shared_ptr<RenderStates3D> states) = 0;
+		virtual void display() = 0;
 
-		friend class renderCommands::PushFramebuffer;
-		friend class renderCommands::PopFramebuffer;
+		virtual void add(std::shared_ptr<Drawable> drawable) = 0;
+		virtual void remove(std::shared_ptr<Drawable> drawable) = 0;
 	};
 
 	THSAN_API RenderManager* create_renderManager();
@@ -47,16 +42,22 @@ namespace Thsan {
 		void clear() override;
 		void setViewport(int x, int y, int w, int h) override;
 		void setDefaultViewport(int x, int y, int w, int h) override;
-		std::shared_ptr<Framebuffer> getActiveFramebuffer() override;
-		void submit(std::unique_ptr<renderCommands::RenderCommand> rc) override;
-		void flush() override;
+		void setState(std::shared_ptr<RenderStates2D> states) override;
+		void setState(std::shared_ptr<RenderStates3D> states) override;
+		void display() override;
+
+		void add(std::shared_ptr<Drawable> drawable) override;
+		void remove(std::shared_ptr<Drawable> drawable) override;
 
 	private:
 		int x{0}, y{ 0 }, w{ 800 }, h{ 600 };
 
-		std::queue<std::unique_ptr<renderCommands::RenderCommand>> renderCommands;
-		std::shared_ptr<RenderTarget> target;
+		std::vector<std::shared_ptr<Drawable>> drawables;
+
+		std::shared_ptr<RenderContext> renderContext;
 		std::shared_ptr<Framebuffer> geometryBufferFramebuffer;
+		std::shared_ptr<RenderStates2D> states;
+		std::shared_ptr<RenderStates3D> states3D;
 	};
 
 }

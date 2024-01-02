@@ -71,6 +71,56 @@ namespace Thsan {
         return true;
 	}
 
+	bool GLTexture2D::create(const glm::uvec2& size, TextureFormat format, const void* data, bool mipmapped, bool smooth)
+	{
+
+		if ((size.x <= 0) || (size.y <= 0))
+		{
+			TS_CORE_ERROR("Failed to create texture, invalid size ({},{})", size.x, size.y);
+			return false;
+		}
+
+		// All the validity checks passed, we can store the new texture settings
+		this->size = { size.x, size.y };
+		pixelsFlipped = false;
+		fboAttachment = false;
+
+		if (!gl_texture_id)
+		{
+			GLuint texture;
+			GL_CHECK(glGenTextures(1, &texture));
+			gl_texture_id = texture;
+		}
+
+		// Initialize the texture
+		GL_CHECK(glBindTexture(GL_TEXTURE_2D, gl_texture_id));
+
+		int width = static_cast<GLsizei>(size.x);
+		int height = static_cast<GLsizei>(size.y);
+
+		auto it = FormatMapping.find(format);
+		if (it != FormatMapping.end()) {
+			auto& [internalFormat, glFormat, glType] = it->second;
+
+			GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, glFormat, glType, data));
+			GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeated ? GL_REPEAT : GL_CLAMP_TO_EDGE));
+			GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeated ? GL_REPEAT : GL_CLAMP_TO_EDGE));
+			GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, smooth ? GL_LINEAR : GL_NEAREST));
+
+			if (mipmapped) {
+				GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, smooth ? GL_LINEAR_MIPMAP_LINEAR : GL_NEAREST_MIPMAP_NEAREST));
+				GL_CHECK(glGenerateMipmap(GL_TEXTURE_2D));
+				hasMipmap = true;
+			}
+			else {
+				GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, smooth ? GL_LINEAR : GL_NEAREST));
+				hasMipmap = false;
+			}
+		}
+
+		return true;
+	}
+
 	bool GLTexture2D::loadFromFile(const std::filesystem::path& filename)
 	{
 		int width, height, numChannels = 0;

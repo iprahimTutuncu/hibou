@@ -79,7 +79,7 @@ namespace Thsan {
 	{
 		GL_CHECK(glUseProgram(program_id));
 		for (int i = 0; i < uniform_texture_ids.size(); i++) {
-			auto value = uniform_texture_ids[i];
+			auto& value = uniform_texture_ids[i];
 			std::shared_ptr<Texture2D> tex2D = value.first.lock();
 			tex2D->bind(i);
 		}

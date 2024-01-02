@@ -15,11 +15,9 @@
     <ClInclude Include="src\platform\openGL\gl_framebuffer.h" />
     <ClInclude Include="src\platform\openGL\gl_texture2D.h" />
     <ClInclude Include="src\platform\SDL\sdl_window.h" />
-    <ClInclude Include="src\platform\vulkan\vk_config.h" />
-    <ClInclude Include="src\platform\vulkan\vk_initializer.h" />
-    <ClInclude Include="src\platform\vulkan\vk_swapchain.h" />
     <ClInclude Include="src\manager\log_manager.h" />
-    <ClInclude Include="src\ressource_manager\texture2D_manager.h" />
+    <ClInclude Include="src\thsan\ressource_manager\texture2D_manager.h" />
+    <ClInclude Include="src\thsan\graphics\render_context.h" />
     <ClInclude Include="src\thsan\graphics\Transformable.h" />
     <ClInclude Include="src\tsm\math\color.h" />
     <ClInclude Include="src\thsan\graphics\drawable.h" />
@@ -70,10 +68,9 @@
     <ClCompile Include="src\platform\openGL\gl_helper.cpp" />
     <ClCompile Include="src\platform\openGL\gl_texture2D.cpp" />
     <ClCompile Include="src\platform\SDL\sdl_window.cpp" />
-    <ClCompile Include="src\platform\vulkan\vk_initializer.cpp" />
-    <ClCompile Include="src\platform\vulkan\vk_swapchain.cpp" />
     <ClCompile Include="src\manager\log_manager.cpp" />
-    <ClCompile Include="src\ressource_manager\texture2D_manager.cpp" />
+    <ClCompile Include="src\thsan\ressource_manager\texture2D_manager.cpp" />
+    <ClCompile Include="src\thsan\graphics\render_context.cpp" />
     <ClCompile Include="src\tsm\math\color.cpp" />
     <ClCompile Include="src\thsan\graphics\sprite_animation.cpp" />
     <ClCompile Include="src\thsan\graphics\tilemap.cpp" />
@@ -150,15 +147,15 @@
       <PreprocessorDefinitions>NOMINMAX;TS_PLATFORM_WINDOWS;TS_BUILD_DLL;TS_CONFIG_DEBUG;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\src\vendor\stb_image\include;$(SolutionDir)Thsan\src\vendor\glm\glm;$(SolutionDir)Thsan\src\vendor\glew-2.1.0-win32\glew-2.1.0\include;$(SolutionDir)Thsan\src\vendor\entt\include;$(SolutionDir)Thsan\src\vendor\sdl2\include;$(SolutionDir)Thsan\src\vendor\vulkan\include;$(SolutionDir)Thsan\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\src\vendor\stb_image\include;$(SolutionDir)Thsan\src\vendor\glm\glm;$(SolutionDir)Thsan\src\vendor\glew-2.1.0-win32\glew-2.1.0\include;$(SolutionDir)Thsan\src\vendor\sdl2\include;$(SolutionDir)Thsan\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Thsan\src\vendor\vulkan\lib;$(SolutionDir)Thsan\src\vendor\glew-2.1.0-win32\glew-2.1.0\lib\Release\x64;$(SolutionDir)Thsan\src\vendor\sdl2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>vulkan-1.lib;opengl32.lib;glew32.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Thsan\src\vendor\glew-2.1.0-win32\glew-2.1.0\lib\Release\x64;$(SolutionDir)Thsan\src\vendor\sdl2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\Thsan.dll" "$(SolutionDir)bin\$(Configuration)-$(Platform)\SandBox\" /Y /I
@@ -173,8 +170,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NOMINMAX;TS_PLATFORM_WINDOWS;TS_BUILD_DLL;TS_CONFIG_RELEASE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(SolutionDir)Thsan\src\vendor\stb_image\include;$(SolutionDir)Thsan\src\vendor\glm\glm;$(SolutionDir)Thsan\src\vendor\glew-2.1.0-win32\glew-2.1.0\include;$(SolutionDir)Thsan\src\vendor\entt\include;$(SolutionDir)Thsan\src\vendor\sdl2\include;$(SolutionDir)Thsan\src\vendor\spdlog\include;$(SolutionDir)Thsan\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\src\vendor\stb_image\include;$(SolutionDir)Thsan\src\vendor\glm\glm;$(SolutionDir)Thsan\src\vendor\glew-2.1.0-win32\glew-2.1.0\include;$(SolutionDir)Thsan\src\vendor\sdl2\include;$(SolutionDir)Thsan\src\vendor\spdlog\include;$(SolutionDir)Thsan\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -183,8 +180,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(VULKAN_SDK)\Lib;$(SolutionDir)Thsan\src\vendor\glew-2.1.0-win32\glew-2.1.0\lib\Release\x64;$(SolutionDir)Thsan\src\vendor\sdl2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>vulkan-1.lib;opengl32.lib;glew32.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Thsan\src\vendor\glew-2.1.0-win32\glew-2.1.0\lib\Release\x64;$(SolutionDir)Thsan\src\vendor\sdl2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\Thsan.dll" "$(SolutionDir)bin\$(Configuration)-$(Platform)\SandBox\" /Y /I

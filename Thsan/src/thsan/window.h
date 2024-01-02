@@ -26,9 +26,7 @@ namespace  Thsan {
 
 	protected:
 		virtual bool createContextOpenGL() = 0;
-		virtual bool createContextVulkan() = 0;
 		virtual void destroyContextOpenGL() = 0;
-		virtual void destroyContextVulkan() = 0;
 
 		int width{ 0 };
 		int height{ 0 };

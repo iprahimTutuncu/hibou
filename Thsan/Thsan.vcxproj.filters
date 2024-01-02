@@ -53,9 +53,6 @@
     <ClInclude Include="src\tsm\tsm.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\thsan\log.h" />
-    <ClInclude Include="src\platform\vulkan\vk_config.h" />
-    <ClInclude Include="src\platform\vulkan\vk_initializer.h" />
-    <ClInclude Include="src\platform\vulkan\vk_swapchain.h" />
     <ClInclude Include="src\manager\log_manager.h" />
     <ClInclude Include="src\thsan\graphics\tilemap.h" />
     <ClInclude Include="src\thsan\graphics\drawable.h" />
@@ -64,7 +61,8 @@
     <ClInclude Include="src\thsan\graphics\sprite_animation.h" />
     <ClInclude Include="src\tsm\math\color.h" />
     <ClInclude Include="src\thsan\graphics\Transformable.h" />
-    <ClInclude Include="src\ressource_manager\texture2D_manager.h" />
+    <ClInclude Include="src\thsan\ressource_manager\texture2D_manager.h" />
+    <ClInclude Include="src\thsan\graphics\render_context.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\thsan\game.cpp">
@@ -96,14 +94,13 @@
     <ClCompile Include="src\tsm\math\camera\free_camera.cpp" />
     <ClCompile Include="src\tsm\math\transform.cpp" />
     <ClCompile Include="src\pch.cpp" />
-    <ClCompile Include="src\platform\vulkan\vk_initializer.cpp" />
-    <ClCompile Include="src\platform\vulkan\vk_swapchain.cpp" />
     <ClCompile Include="src\manager\log_manager.cpp" />
     <ClCompile Include="src\thsan\graphics\tilemap.cpp" />
     <ClCompile Include="src\thsan\graphics\tilemap_impl.cpp" />
     <ClCompile Include="src\thsan\graphics\view.cpp" />
     <ClCompile Include="src\thsan\graphics\sprite_animation.cpp" />
     <ClCompile Include="src\tsm\math\color.cpp" />
-    <ClCompile Include="src\ressource_manager\texture2D_manager.cpp" />
+    <ClCompile Include="src\thsan\ressource_manager\texture2D_manager.cpp" />
+    <ClCompile Include="src\thsan\graphics\render_context.cpp" />
   </ItemGroup>
 </Project>

@@ -4,28 +4,15 @@
 #include "gl_framebuffer.h"
 #include "GL/glew.h"
 #include "gl_helper.h"
-
+#include "gl_texture2D.h"
+#include <thsan/ressource_manager/texture2D_manager.h>
 
 namespace Thsan {
-
-    const std::unordered_map<TextureFormat, std::tuple<GLenum, GLenum, GLenum>> FormatMapping = {
-    {TextureFormat::RGBA8, {GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE}},
-    {TextureFormat::R32F, {GL_R32F, GL_RED, GL_FLOAT}},
-    {TextureFormat::RGB16F, {GL_RGB16F, GL_RGB, GL_HALF_FLOAT}},
-    // Add more mappings as needed
-    };
-
-    GLFramebuffer::GLFramebuffer() :
-        Framebuffer(0, 0),
-        fbo(0)
-    {
-    }
 
     GLFramebuffer::GLFramebuffer(uint32_t width, uint32_t height) :
         Framebuffer(width, height)
     {
         GL_CHECK(glGenFramebuffers(1, &fbo));
-        GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, fbo));
     }
 
     GLFramebuffer::~GLFramebuffer()
@@ -59,13 +46,18 @@ namespace Thsan {
 
     void GLFramebuffer::attachColorTarget(int attachmentIndex, TextureFormat format)
     {
+        GLint previousFramebuffer;
+        glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFramebuffer);
+
+        GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, fbo));
+
         if (attachmentIndex >= colorAttachments.size()) {
             TS_CORE_ERROR("in Framebuffer::attachColorTarget, attachmentIndex is {} which is bigger than the numColorAttachments that is {}, so aborted buddy\n", attachmentIndex, colorAttachments.size());
             return;
         }
         auto it = FormatMapping.find(format);
         if (it != FormatMapping.end()) {
-            auto [internalFormat, glFormat, glType] = it->second;
+            auto& [internalFormat, glFormat, glType] = it->second;
 
             std::stringstream ss;
             ss << "fbo" << fbo;
@@ -75,12 +67,14 @@ namespace Thsan {
             ss << "_type" << glType;
             std::string name = ss.str();
 
-            auto texture = RessourceManager::Texture2DManager::create(name, { size, internalFormat, glFormat, glType, nullptr });
+            auto texture = RessourceManager::Texture2DManager::create(name, { glm::uvec2(width, height), format, nullptr});
 
             GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachmentIndex, GL_TEXTURE_2D, texture->getID(), 0));
 
             colorAttachments[attachmentIndex] = texture;
         }
+
+        GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, previousFramebuffer));
     }
 
     void GLFramebuffer::attachDepthStencilTarget()
@@ -94,12 +88,12 @@ namespace Thsan {
         for (int i = 0; i < colorAttachments.size(); i++)
             attachments.push_back(GL_COLOR_ATTACHMENT0 + i);
 
-        GL_CHECK(glDrawBuffers(attachments.size(), attachments.data()));
+        GL_CHECK(glDrawBuffers(static_cast<GLsizei>(attachments.size()), attachments.data()));
 
         GL_CHECK(glGenRenderbuffers(1, &depthStencilRenderbuffer));
         GL_CHECK(glBindRenderbuffer(GL_RENDERBUFFER, depthStencilRenderbuffer));
 
-        GL_CHECK(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, size.x, size.y));
+        GL_CHECK(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height));
         GL_CHECK(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthStencilRenderbuffer));
         GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, previousFramebuffer));
     }
@@ -118,10 +112,14 @@ namespace Thsan {
 
     std::shared_ptr<Texture2D> GLFramebuffer::getTexture(int attachmentIndex) const
     {
-        return std::shared_ptr<Texture2D>();
+        if (attachmentIndex < 0 || attachmentIndex >= colorAttachments.size())
+            return nullptr;
+
+        return colorAttachments[attachmentIndex];
     }
 
     std::shared_ptr<Texture2D> GLFramebuffer::getDepthTexture() const
     {
-        return std::shared_ptr<Texture2D>();
+        return depthAttachment;
     }
+}

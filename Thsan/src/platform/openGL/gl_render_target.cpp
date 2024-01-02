@@ -28,6 +28,12 @@ namespace Thsan {
 		GL_CHECK(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
 		glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
+
+		GLenum error = glGetError();
+		if (error != GL_NO_ERROR) {
+			TS_CORE_ERROR("OpenGL error before rendering: {}", error);
+		}
+
 		return true;
 	}
 

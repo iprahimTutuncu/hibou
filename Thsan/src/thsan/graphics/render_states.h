@@ -75,7 +75,6 @@ namespace Thsan {
 		never
 	};
 
-
 	class THSAN_API RenderStates {
 	public:
 		RenderStates() = default;

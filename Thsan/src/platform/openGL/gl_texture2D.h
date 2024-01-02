@@ -1,5 +1,8 @@
 #pragma once
 #include "thsan/graphics/texture.h"
+#include <glm/ext/vector_uint2.hpp>
+#include <unordered_map>
+#include <GL/glew.h>
 
 namespace Thsan {
 	class GLTexture2D : public Texture2D {
@@ -11,6 +14,8 @@ namespace Thsan {
 		virtual bool isValid() const override;
 
 		virtual bool create(const vec2u& size) override;
+
+		virtual [[nodiscard]] bool create(const glm::uvec2& size, TextureFormat format, const void* data = nullptr, bool mipmapped = false, bool smooth = false) override;
 
 		virtual bool loadFromFile(const std::filesystem::path& filename) override;
 
@@ -35,5 +40,12 @@ namespace Thsan {
 
 		unsigned char* pixels;
 
+	};
+
+	const std::unordered_map<TextureFormat, std::tuple<GLenum, GLenum, GLenum>> FormatMapping = {
+	   {TextureFormat::RGBA8, {GL_RGBA8, GL_RGBA, GL_UNSIGNED_INT}},
+	   {TextureFormat::R32F, {GL_R32F, GL_RED, GL_FLOAT}},
+	   {TextureFormat::RGB16F, {GL_RGB16F, GL_RGB, GL_HALF_FLOAT}},
+		// Add more mappings as needed
 	};
 }

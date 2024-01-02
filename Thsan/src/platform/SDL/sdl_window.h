@@ -4,9 +4,6 @@
 #include <vector>
 #include <optional>
 
-#include "../vulkan/vk_swapchain.h"
-#include "../vulkan/vk_initializer.h"
-
 struct SDL_Window;
 using SDL_GLContext = void*;
 
@@ -29,29 +26,10 @@ namespace Thsan {
 
     private:
         bool createContextOpenGL() override;
-        bool createContextVulkan() override;
         void destroyContextOpenGL() override;
-        void destroyContextVulkan() override;
 
         SDL_Window* window{ nullptr };
         std::function<void(int, int)> resizeCallback;
-
-        //VULKAN SPECIFIQUE
-        bool createInstance();
-        bool createSurface();
-        bool selectPhysicalDevice();
-        bool createLogicalDevice();
-
-        SwapChainBundle swapchainBundle;
-
-        vk::Instance* instance{ nullptr };
-        vk::SurfaceKHR* surface{ nullptr };
-        vk::PhysicalDevice* physicalDevice{ nullptr };
-        vk::Device* device{ nullptr };
-        vk::Queue* graphicQueue{ nullptr };
-        vk::Queue* presentQueue{ nullptr };
-
-
 
         //OPENGL SPECIFIQUE
         SDL_GLContext glContext{ nullptr };

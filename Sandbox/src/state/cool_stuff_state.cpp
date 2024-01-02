@@ -230,8 +230,6 @@ void CoolStuffState::init()
 	spriteAnimation->setKeyColor(tsm::Color(0, 112, 112, 255));
 	spriteAnimation->start();
 
-	framebuffer = ts::create_framebuffer(800, 600);
-
 	tilemap = Thsan::create_tilemap();
 	const int tiles[] =
 	{ 
@@ -310,6 +308,8 @@ void CoolStuffState::init()
 
 		camera->setFilter(camera_filter); //one at a time, only renders to one frambuffer idle
 	*/
+
+
 }
 
 void CoolStuffState::input(const float& deltaTime, std::vector<ts::InputAction> inputActions)
@@ -347,6 +347,7 @@ void CoolStuffState::input(const float& deltaTime, std::vector<ts::InputAction> 
 	view->setRotation(r);
 	view->setPosition(x - 400, y - 300);
 	renderstates->setView(view);
+
 }
 
 void CoolStuffState::update(const float& deltaTime)
@@ -359,32 +360,14 @@ void CoolStuffState::update(const float& deltaTime)
 
 void CoolStuffState::draw(ts::RenderManager* target, const float& deltaTime)
 {
-	target->clear();
-	framebuffer->setClearColor(0.1f, 0.1f, 0.2f, 0.3f);
-	auto push_fb = ts::renderCommands::create_pushFramebufferCommand(framebuffer);
-	target->submit(std::move(push_fb));
+	target->setState(renderstates);
 
-	//auto rc = ts::renderCommands::create_renderSceneCommand(std::vector<Model>, transform, shader);
-	//auto rc = ts::renderCommands::create_renderMeshCommand(mesh, renderstates);
+	target->add(spriteAnimation);
+	target->add(tilemap);
 
-	auto pop_fb = ts::renderCommands::create_popFramebufferCommand();
-	target->submit(std::move(pop_fb));
+	target->display();
 
-	auto sprite_command = ts::renderCommands::create_renderDrawableCommand(spriteAnimation, renderstates);
-	target->submit(std::move(sprite_command));
-
-	auto tilemap_command = ts::renderCommands::create_renderDrawableCommand(tilemap, renderstates);
-	target->submit(std::move(tilemap_command));
-	target->flush();
-
-
-	/*
-		target.clear(glm::vec4(0.1f, 0.1f, 0.2f, 0.3f));
-
-		target.add(sprite);
-		target.add(tile);
-
-		target.display();
-	*/
+	target->remove(spriteAnimation);
+	target->remove(tilemap);
 }
 

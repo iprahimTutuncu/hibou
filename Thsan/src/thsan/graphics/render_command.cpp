@@ -10,9 +10,9 @@
 #include "thsan/graphics/drawable.h"
 
 namespace Thsan {
-	namespace renderCommands {
-		void RenderMesh::execute(const std::weak_ptr<RenderTarget> target, RenderManager& renderManager)
-		{
+	namespace RenderCmd {
+		void RenderMesh::execute(const std::weak_ptr<RenderTarget> target)
+		{ 
 			std::shared_ptr<Mesh> tmp_mesh = mesh.lock();
 			std::shared_ptr<RenderStates2D> tmp_renderStates2D = renderStates2D.lock();
 			std::shared_ptr<RenderTarget> tmp_target = target.lock();
@@ -29,7 +29,7 @@ namespace Thsan {
 			}
 		}
 
-		void RenderDrawable::execute(const std::weak_ptr<RenderTarget> target, RenderManager& renderManager)
+		void RenderDrawable::execute(const std::weak_ptr<RenderTarget> target)
 		{
 			std::shared_ptr<Drawable> tmp_drawable = drawable.lock();
 			std::shared_ptr<RenderStates2D> tmp_renderStates2D = renderStates2D.lock();
@@ -41,44 +41,15 @@ namespace Thsan {
 				TS_CORE_WARN("Warning: attempting to execute RenderDrawable on invalid data");
 		}
 
-		void PushFramebuffer::execute(const std::weak_ptr<RenderTarget> target, RenderManager& renderManager)
-		{
-			std::shared_ptr<Framebuffer> tmp_framebuffer = framebuffer.lock();
-
-			if (tmp_framebuffer) {
-				renderManager.pushFramebuffer(tmp_framebuffer);
-			}
-			else {
-				TS_CORE_ERROR("error: in PushFramebuffer::execute, framebuffer is not valid\n");
-			}
-		}
-
-		void PopFramebuffer::execute(const std::weak_ptr<RenderTarget> target, RenderManager& renderManager)
-		{
-			renderManager.popFramebuffer();
-		}
-
-		THSAN_API std::unique_ptr<RenderCommand> create_renderMeshCommand(std::weak_ptr<Mesh> mesh, std::weak_ptr<RenderStates2D> renderStates2D)
+		THSAN_API std::unique_ptr<Command> create_renderMeshCommand(std::weak_ptr<Mesh> mesh, std::weak_ptr<RenderStates2D> renderStates2D)
 		{
 			return std::make_unique<RenderMesh>(mesh, renderStates2D);
 		}
 
-		THSAN_API std::unique_ptr<RenderCommand> create_renderDrawableCommand(std::weak_ptr<Drawable> drawable, std::weak_ptr<RenderStates2D> renderStates2D)
+		THSAN_API std::unique_ptr<Command> create_renderDrawableCommand(std::weak_ptr<Drawable> drawable, std::weak_ptr<RenderStates2D> renderStates2D)
 		{
 			return std::make_unique<RenderDrawable>(drawable, renderStates2D);
 		}
-
-		THSAN_API std::unique_ptr<RenderCommand> create_pushFramebufferCommand(std::weak_ptr<Framebuffer> framebuffer)
-		{
-			return std::make_unique<PushFramebuffer>(framebuffer);
-		}
-
-		THSAN_API std::unique_ptr<RenderCommand> create_popFramebufferCommand() {
-
-			return std::make_unique<PopFramebuffer>();
-		}
-
-
 
 	}
 }

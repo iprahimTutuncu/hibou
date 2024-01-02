@@ -13,6 +13,7 @@ namespace Thsan {
 		void setViewport(int x, int y, int w, int h) override;
 		void setClearColor(float r, float g, float b, float a) override;
 		void draw(const Mesh& mesh) const override;
+
 	private:
 
 	};

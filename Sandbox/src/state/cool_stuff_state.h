@@ -40,7 +40,6 @@ private:
 	std::shared_ptr<ts::Shader> shader;
 	std::shared_ptr<ts::Texture2D> sprite_texture;
 	std::shared_ptr<ts::Texture2D> tilemap_texture;
-	std::shared_ptr<ts::Framebuffer> framebuffer;
 	std::shared_ptr<ts::RenderStates2D> renderstates;
 	std::shared_ptr<ts::Tilemap> tilemap;
 	std::shared_ptr<ts::View> view;

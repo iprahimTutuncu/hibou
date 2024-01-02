@@ -22,13 +22,20 @@ namespace Thsan {
         return nullptr;
     }
     Framebuffer::Framebuffer(uint32_t width, uint32_t height):
-        size(width, height)
+        width(width),
+        height(height)
     {
     }
 
-    inline glm::uvec2 Framebuffer::getSize() const
+    Framebuffer::Framebuffer() :
+        width(0),
+        height(0)
     {
-        return size;
+    }
+
+    inline glm::uvec2 Framebuffer::getSize()
+    {
+        return glm::uvec2(width, height);
     }
 
 }

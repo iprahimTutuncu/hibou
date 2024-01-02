@@ -26,10 +26,10 @@ namespace Thsan {
             reachedDuration = 0.f;
         }
         void setCurrIndex(unsigned short i) { curr = i; }
-        unsigned short getCurrIndex() { return curr; }
-        unsigned short getSize() { return max; }
-        float getTotalDuration() { return totalDuration; }
-        float getReachedDuration() { return reachedDuration; }
+        unsigned short getCurrIndex() const { return curr; }
+        unsigned short getSize() const { return max; }
+        float getTotalDuration() const { return totalDuration; }
+        float getReachedDuration() const { return reachedDuration; }
         void nextFrame() {
             if (curr >= max - 1) {
                 if (looping)
@@ -42,7 +42,7 @@ namespace Thsan {
         };
         void prevFrame() { (curr < 0) ? curr = max - 1 : curr--; }
         void enableLoop(bool isEnable) { looping = isEnable; }
-        bool isLoop() { return looping; }
+        bool isLoop() const { return looping; }
 
     private:
         std::vector<glm::vec4> frameRect;
@@ -316,12 +316,12 @@ namespace Thsan {
         return animations[curr]->getSize();  // la quantité de frame
     }
 
-    int SpriteAnimationImpl::getFrameWidth()
+    float SpriteAnimationImpl::getFrameWidth()
     {
         return animations[curr]->getCurrentFrameRect().z;
     }
 
-    int SpriteAnimationImpl::getFrameHeight() 
+    float SpriteAnimationImpl::getFrameHeight() 
     {
         return animations[curr]->getCurrentFrameRect().w;
     }

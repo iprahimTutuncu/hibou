@@ -2,6 +2,7 @@
 #include "thsan/core.h"
 #include "thsan/system/vector.h"
 #include <fstream>
+#include <glm/ext/vector_uint2.hpp>
 
 namespace Thsan {
 
@@ -22,6 +23,8 @@ namespace Thsan {
 
 		virtual bool isValid() const = 0;
 		virtual [[nodiscard]] bool create(const vec2u& size) = 0;
+		virtual [[nodiscard]] bool create(const glm::uvec2& size, TextureFormat format, const void* data = nullptr, bool mipmapped = false, bool smooth = false) = 0;
+
 		virtual bool loadFromFile(const std::filesystem::path& filename) = 0;
 
 		// todo

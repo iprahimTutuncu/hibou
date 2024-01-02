@@ -45,8 +45,8 @@ namespace Thsan {
         virtual bool hasAnimation(const std::string& name) const = 0;
         virtual unsigned int getFrameIndex() = 0;
         virtual int getFrameCount() = 0;
-        virtual int getFrameWidth() = 0;
-        virtual int getFrameHeight() = 0;
+        virtual float getFrameWidth() = 0;
+        virtual float getFrameHeight() = 0;
         virtual float getCurrentAnimationTimeDuration() = 0;
         virtual float getCurrentAnimationTimeReached() const = 0;
         virtual glm::uvec2 getSpriteSheetSize() const  = 0;
@@ -118,8 +118,8 @@ namespace Thsan {
         bool hasAnimation(const std::string& name) const override;
         unsigned int getFrameIndex() override;
         int getFrameCount() override;
-        int getFrameWidth() override;
-        int getFrameHeight() override;
+        float getFrameWidth() override;
+        float getFrameHeight() override;
         float getCurrentAnimationTimeDuration() override;
         float getCurrentAnimationTimeReached() const override;
         glm::uvec2 getSpriteSheetSize() const override;
