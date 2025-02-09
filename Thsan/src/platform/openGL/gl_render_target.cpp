@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "gl_render_target.h"
-#include "gl_helper.h"
+#include "platform/openGL/gl_render_target.h"
+#include "platform/openGL/gl_helper.h"
 #include "thsan/graphics/mesh.h"
 #include "thsan/graphics/drawable.h"
 #include "thsan/log.h"
@@ -11,7 +11,7 @@ namespace Thsan {
 
 	bool GLRenderTarget::init()
 	{
-		TS_CORE_INFO("OpenGL info \n Vendor:\t{}\n Renderer:\t{}\n Version:\t{}",
+		TS_CORE_INFO("OpenGL info \n Vendor:\t{}\n Renderer2D:\t{}\n Version:\t{}",
 			(const char*)glGetString(GL_VENDOR),
 			(const char*)glGetString(GL_RENDERER),
 			(const char*)glGetString(GL_VERSION)
@@ -39,7 +39,7 @@ namespace Thsan {
 
 	void GLRenderTarget::clear()
 	{
-		GL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+		GL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT));
 	}
 
 	void GLRenderTarget::setViewport(int x, int y, int w, int h)
@@ -54,7 +54,23 @@ namespace Thsan {
 
 	void GLRenderTarget::draw(const Mesh& mesh) const
 	{
-		GL_CHECK(glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.getIndiceCount()), GL_UNSIGNED_INT, 0));
+		GLenum primitiveType = primitiveTypeToGL.at(mesh.getPrimitiveType());
+
+		if (primitiveType == GL_NONE){
+			if (mesh.getIndiceCount() == 0) {
+				TS_CORE_WARN("GLRenderTarget::draw(const Mesh& mesh) const, primitive not natively supported in openGL, Usually you should force the mesh to provide a list of indices that reflect that primitive in mesh.");
+			}
+
+			primitiveType = GL_TRIANGLES;
+		}
+
+		if (mesh.getIndiceCount() == 0) {
+			GL_CHECK(glDrawArrays(primitiveType, 0, static_cast<GLsizei>(mesh.getVertexCount())));
+		}
+		else {
+			GL_CHECK(glDrawElements(primitiveType, static_cast<GLsizei>(mesh.getIndiceCount()), GL_UNSIGNED_INT, 0));
+		}
 	}
+
 
 }

@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "framebuffer.h"
+#include "thsan/graphics/framebuffer.h"
 
 #include "thsan/log.h"
 #include "thsan/graphics/graphic_api.h"

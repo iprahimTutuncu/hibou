@@ -1,6 +1,6 @@
 #include <thsan/log.h>
 #include <glm/glm.hpp>
-#include <thsan/Input/ControlSetting.h>
+#include <thsan/Input/control_setting.h>
 #include <thsan/graphics/vertex.h>
 #include <thsan/graphics/mesh.h>
 #include <thsan/graphics/shader.h>
@@ -8,17 +8,29 @@
 #include <thsan/graphics/framebuffer.h> 
 #include <thsan/graphics/render_command.h>
 #include <thsan/graphics/render_states.h>
-#include <thsan/graphics/tilemap.h>
+#include <thsan/graphics/drawable/tilemap.h>
+#include <thsan/graphics/terrain/terrain.h>
 #include <thsan/graphics/view.h>
-#include <thsan/graphics/sprite_animation.h>
+#include <thsan/graphics/drawable/sprite_animation.h>
+#include <thsan/graphics/compute_shader.h>
+#include <thsan/graphics/modifier/on_terrain_modifier.h>
 #include <thsan/game.h>
 #include <tsm/math/transform.h>
-
+#include <thsan/hud/debug_hud/exemple_panel_debug.h>
+#include <thsan/hud/debug_hud/terrain_panel_debug.h>
+#include <thsan/hud/debug_hud/menu_bar_panel_debug.h>
 #include "cool_stuff_state.h"
-#include "../ressource_manager/texture2D_manager.h"
+#include <thsan/graphics/drawable/cube.h>
+#include <thsan/graphics/font.h>
+#include <thsan/graphics/drawable/text.h>
+#include <thsan/ressource_manager/font_manager.h>
+#include <thsan/hud/general_hud/label_button.h>
+#include <thsan/hud/general_hud/label.h>
+#include <thsan/hud/general_hud/gui.h>
+#include <thsan/hud/general_hud/panel.h>
 
 struct world {
-	float gravity{ -9.81 };
+	float gravity{ -9.81f };
 };
 
 struct Player{
@@ -35,168 +47,23 @@ float get_initial_velocity(Player p) {
 	return (2 * p.jump_height) / p.jump_duration;
 }
 
-
-
 CoolStuffState::CoolStuffState(ts::Game* parent):
 	ts::State(parent)
 { 
 }
 
-std::shared_ptr<Thsan::Mesh> generateColoredGrid(unsigned int columns, unsigned int rows, float cellSize) {
-	// Calculate the total number of vertices and indices
-	unsigned int vertexCount = (rows + 1) * (columns + 1);
-	unsigned int indexCount = rows * columns * 6; // Each cell has 2 triangles (6 indices)
-
-	// Create a mesh with the calculated vertex count
-	std::shared_ptr<Thsan::Mesh> gridMesh = Thsan::create_mesh(vertexCount);
-
-	// Create vertices for the grid
-	std::vector<Thsan::Vertex> vertices;
-	for (unsigned int i = 0; i <= rows; ++i) {
-		for (unsigned int j = 0; j <= columns; ++j) {
-			float x = static_cast<float>(j) * cellSize;
-			float y = static_cast<float>(i) * cellSize;
-
-			// Calculate a unique color based on row and column indices
-			float r = static_cast<float>(i) / static_cast<float>(rows);
-			float g = static_cast<float>(j) / static_cast<float>(columns);
-			float b = 0.5f; // You can adjust the blue component as needed
-
-			// Create a vertex with position and color information
-			Thsan::Vertex vertex;
-			vertex.position = Thsan::vec3f{ x, y, 0.0f };
-			vertex.color = Thsan::vec4f{ r, g, b, 1.0f };
-			vertex.texCoord = Thsan::vec2f{r,g};
-
-			vertices.push_back(vertex);
-		}
-	}
-
-	// Set the grid vertices
-	gridMesh->setVertices(vertices);
-
-	// Create indices for the grid
-	std::vector<uint32_t> indices;
-	for (unsigned int i = 0; i < rows; ++i) {
-		for (unsigned int j = 0; j < columns; ++j) {
-			// Define indices for the two triangles forming each cell
-			uint32_t topLeft = i * (columns + 1) + j;
-			uint32_t topRight = topLeft + 1;
-			uint32_t bottomLeft = (i + 1) * (columns + 1) + j;
-			uint32_t bottomRight = bottomLeft + 1;
-
-			// Triangle 1
-			indices.push_back(topLeft);
-			indices.push_back(bottomRight);
-			indices.push_back(bottomLeft);
-
-			// Triangle 2
-			indices.push_back(topLeft);
-			indices.push_back(topRight);
-			indices.push_back(bottomRight);
-		}
-	}
-
-	// Set the grid indices
-	gridMesh->setIndices(indices);
-
-	return gridMesh;
-}
-
-std::shared_ptr<Thsan::Mesh> createQuadMesh(float x, float y, float width, float height, const Thsan::vec4f& color) {
-	// Create a mesh with 4 vertices (one for each corner of the quad)
-	std::shared_ptr<Thsan::Mesh> quadMesh = Thsan::create_mesh(4);
-
-	// Create vertices for the quad
-	std::vector<Thsan::Vertex> vertices(4);
-
-	// Vertex 0 - Top Left
-	vertices[0].position = Thsan::vec3f{ x, y, 0.0f };
-	vertices[0].color = color;
-	vertices[0].texCoord = Thsan::vec2f{ 0.f , 0.0f };
-
-	// Vertex 1 - Top Right
-	vertices[1].position = Thsan::vec3f{ x + width, y, 0.0f };
-	vertices[1].color = color;
-	vertices[1].texCoord = Thsan::vec2f{ 1.0f, 0.0f };
-
-	// Vertex 2 - Bottom Right
-	vertices[2].position = Thsan::vec3f{ x + width, y + height, 0.0f };
-	vertices[2].color = color;
-	vertices[2].texCoord = Thsan::vec2f{ 1.0f, 1.0f };
-
-	// Vertex 3 - Bottom Left
-	vertices[3].position = Thsan::vec3f{ x, y + height, 0.0f };
-	vertices[3].color = color;
-	vertices[3].texCoord = Thsan::vec2f{ 0.0f, 1.0f };
-
-	// Set the quad vertices
-	quadMesh->setVertices(vertices);
-
-	// Create indices for the quad (two triangles)
-	std::vector<uint32_t> indices = { 0, 1, 2, 0, 2, 3 };
-	quadMesh->setIndices(indices);
-
-	return quadMesh;
-}
-
-std::shared_ptr<Thsan::Mesh> generateColoredCube(float size) {
-	// Calculate the vertices and indices for a cube
-	std::vector<Thsan::Vertex> vertices;
-	std::vector<uint32_t> indices;
-
-	// Define the eight vertices of the cube
-	// You can adjust the colors as needed
-	Thsan::vec3f positions[] = {
-		{-size, -size, -size}, // Vertex 0
-		{size, -size, -size},  // Vertex 1
-		{size, size, -size},   // Vertex 2
-		{-size, size, -size},  // Vertex 3
-		{-size, -size, size},  // Vertex 4
-		{size, -size, size},   // Vertex 5
-		{size, size, size},    // Vertex 6
-		{-size, size, size}    // Vertex 7
-	};
-
-	Thsan::vec4f colors[] = {
-		{1.0f, 0.0f, 0.0f, 1.0f}, // Red
-		{0.0f, 1.0f, 0.0f, 1.0f}, // Green
-		{0.0f, 0.0f, 1.0f, 1.0f}, // Blue
-		{1.0f, 1.0f, 0.0f, 1.0f}, // Yellow
-		{1.0f, 0.0f, 1.0f, 1.0f}, // Magenta
-		{0.0f, 1.0f, 1.0f, 1.0f}, // Cyan
-		{0.5f, 0.5f, 0.5f, 1.0f}, // Gray
-		{1.0f, 1.0f, 1.0f, 1.0f}  // White
-	};
-
-	// Define the indices for the cube's triangles (12 triangles, 36 indices)
-	uint32_t cubeIndices[] = {
-		0, 1, 2, 2, 3, 0, // Front face
-		1, 5, 6, 6, 2, 1, // Right face
-		5, 4, 7, 7, 6, 5, // Back face
-		4, 0, 3, 3, 7, 4, // Left face
-		3, 2, 6, 6, 7, 3, // Top face
-		4, 5, 1, 1, 0, 4  // Bottom face
-	};
-
-	// Create the cube's vertices
-	for (int i = 0; i < 8; ++i) {
-		Thsan::Vertex vertex;
-		vertex.position = positions[i];
-		vertex.color = colors[i];
-		vertices.push_back(vertex);
-	}
-
-	// Create the cube's mesh
-	std::shared_ptr<Thsan::Mesh> cubeMesh = Thsan::create_mesh(vertices.size());
-	cubeMesh->setVertices(vertices);
-	cubeMesh->setIndices(std::vector<uint32_t>(cubeIndices, cubeIndices + 36));
-
-	return cubeMesh;
-}
-
-void CoolStuffState::init()
+void CoolStuffState::onStart()
 {
+
+	terrainOptions = &this->getParent()->options.renderOptions.terrainOptions;
+	parent->enableDebugUI();
+	parent->addDebugPanel<ts::TerrainPanelDebug>("terain", &this->getParent()->options.renderOptions.terrainOptions);
+	parent->addDebugPanel<ts::MenuBarPanelDebug>("menubar", &parent->options);
+
+	positioOnTerrain.y = 0;
+	positioOnTerrain.z = 0;
+	positioOnTerrain.x = 0;
+
 	parent->add(ts::Key::Left, ts::InputState::isPressed, ts::InputAction::left);
 	parent->add(ts::Key::Right, ts::InputState::isPressed, ts::InputAction::right);
 	parent->add(ts::Key::Up, ts::InputState::isPressed, ts::InputAction::up);
@@ -206,14 +73,85 @@ void CoolStuffState::init()
 	parent->add(ts::Key::Z, ts::InputState::isPressed, ts::InputAction::action);
 	parent->add(ts::Key::Lshift, ts::InputState::isPressed, ts::InputAction::select);
 
-	shader = ts::create_shader("media/shader/base2D.vert", "media/shader/base2D.frag");
+	gui = ui::Gui::create();
+	gui->setScreenSize(this->getParent()->options.windowOptions.screenWidth, this->getParent()->options.windowOptions.screenHeight);
 
-	mesh = createQuadMesh(0.f, 0.f, 100.f, 100.f, Thsan::vec4f{1.0f, 0.0f, 0.0f, 1.0f});
-	mesh->generate();
+	std::shared_ptr<Thsan::Font> font = Thsan::Font::create("media/font/font1.fnt", "media/font/font1.png");
+	auto title = ui::Label::create("Label-0");
+	bttnPlay = ui::LabelButton::create("LabelButton-0");
+	bttnQuit = ui::LabelButton::create("LabelButton-1");
+	title->setFont(font);
+	title->setMargin(glm::vec2(150, 100));
+	title->setSize(glm::vec2(300, 32));	
+	title->setColor(tsm::Color(128, 128, 255, 255));
 
+	bttnPlay->setMargin(glm::vec2(300, 300));
+	bttnPlay->setSize(glm::vec2(200, 64));	
 
+	bttnPlay->setColor(tsm::Color(1.0, 0.0, 0.5, 255));
+	bttnPlay->setString(U"play");
 
-	sprite_texture = RessourceManager::Texture2DManager::get("media/image/sonic.png");
+	bttnPlay->connect(ui::Action::hover, [&]() {
+		bttnPlay->setColor(tsm::Color(0.0, 0.0, 255, 255));
+		});
+
+	bttnPlay->connect(ui::Action::crossed, [&]() {
+		bttnPlay->setColor(tsm::Color(255, 255, 255, 255));
+		bttnPlay->setString(U"PLAY");
+		});
+
+	//bttn quit
+	bttnQuit->setMargin(glm::vec2(300, 450));
+	bttnQuit->setSize(glm::vec2(200, 64));
+
+	bttnQuit->setColor(tsm::Color(1.0, 0.0, 0.5, 255));
+	bttnQuit->setString(U"quit");
+
+	bttnQuit->connect(ui::Action::hover, [&]() {
+		bttnQuit->setColor(tsm::Color(0.0, 55.0, 255, 255));
+		});
+
+	bttnQuit->connect(ui::Action::crossed, [&]() {
+		bttnQuit->setColor(tsm::Color(255, 255, 255, 255));
+		bttnQuit->setString(U"quit");
+		});
+
+	bttnQuit->set(ui::Direction::up, bttnPlay);
+	bttnQuit->set(ui::Direction::down, bttnPlay);
+
+	bttnPlay->set(ui::Direction::up, bttnQuit);
+	bttnPlay->set(ui::Direction::down, bttnQuit);
+
+	panel = ui::Panel::create();
+
+	ui::PanelData pd;
+	pd.backgroundColor = tsm::Color(255, 0, 0, 255);
+	pd.borderWidth = 10.f;
+	pd.colorBorder1 = tsm::Color(135, 244, 239, 255);
+	pd.colorBorder2 = tsm::Color(231, 230, 179, 255);
+	pd.colorBorder3 = tsm::Color(76, 50, 76, 255);
+	pd.cornerRadius = 7.f;
+	pd.enableBgTexture = true;
+	pd.shadowSize = 0.f;
+
+	panel->setBgTexture("media/image/sasuke.jpg");
+	panel->setShaderParams(pd);
+	panel->setMargin(glm::vec2(100, 100));
+	panel->setSize(glm::vec2(700, 500));
+
+	gui->setFont(font);
+
+	gui->add(panel);
+	gui->add(title);
+	gui->add(bttnPlay);
+	gui->add(bttnQuit);
+
+	gui->setSelection(bttnPlay);
+
+	title->setColor(tsm::Color(128, 128, 255, 255));
+	title->setString(U"nicest game");
+
+	sprite_texture = parent->getTexture("media/image/sonic.png");
 
 	spriteAnimation = Thsan::SpriteAnimation::create();
 	spriteAnimation->setTexture(sprite_texture);
@@ -230,7 +168,7 @@ void CoolStuffState::init()
 	spriteAnimation->setKeyColor(tsm::Color(0, 112, 112, 255));
 	spriteAnimation->start();
 
-	tilemap = Thsan::create_tilemap();
+	tilemap = Thsan::Tilemap::create();
 	const int tiles[] =
 	{ 
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -275,8 +213,7 @@ void CoolStuffState::init()
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,610,611,611,611,612,611,611,611,612,611,611,612,613,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	};
 
-
-	tilemap_texture = RessourceManager::Texture2DManager::get("media/image/tileset.png");
+	tilemap_texture = parent->getTexture("media/image/tileset.png");
 
 	Thsan::Tileset tileset;
 	tileset.margin = 8;
@@ -289,85 +226,203 @@ void CoolStuffState::init()
 
 	tilemap->loadTileset(tileset, tilemap_texture);
 	tilemap->load(tiles);
-
-	renderstates = Thsan::create_renderstates2D();
-	renderstates->setShader(shader);
-
+	
 	//make a default if not exist
-	view = Thsan::View::create(0, 0, 800, 600, 1.f, 0.f);
+	view = Thsan::View::create(0, 0, 1280, 768, 300.f, 1.f, 0.f);
 	view->setZoom(1.f);
-	renderstates->setView(view);
 
-	/*
-		camera = renderMng->create_camera(); // would be clean ngl
-		camera.setPosition(glm::vec3(5.0f, 0.0, 0.0));
-		//...more transform
+	//cube = ts::Cube::create();
+	//cube->setScale(glm::vec3(100.f, 100.f, 100.f));
+	//cube->setTexture(tilemap_texture);
 
-		std::Shared_ptr<CameraFilter> camera_filter = renderMng->create_camera_filter();
-		camera_filter->setTint(glm::vec4(1.0f, 0.0, 0.0, 0.5));
+	terrainOptions->position[0] = 0.0f;
+	terrainOptions->position[1] = 190.5f;
+	terrainOptions->position[2] = 70.0f;
 
-		camera->setFilter(camera_filter); //one at a time, only renders to one frambuffer idle
-	*/
+	terrainOptions->normalBlurr[0] = 0.0f;
+	terrainOptions->normalBlurr[1] = 0.0f;
 
+	// Initialize other members
+	terrainOptions->terrainSize = 1024;
+
+	terrainOptions->normalBlurIteration = 0;
+	terrainOptions->LOD = 0.0f;
+	terrainOptions->LODStartAt = 0.0f;
+	terrainOptions->angle = 0.0f;
+	terrainOptions->horizon = 50.0f;
+	terrainOptions->scaleHeight = 256.f;
+	terrainOptions->spriteRenderDistance = 300.0f;
+	terrainOptions->terrainRenderDistance = 1000.0f;
+	terrainOptions->shininess = 0.0f;
+	terrainOptions->blurType = 0;
+
+	strcpy_s(terrainOptions->albedoTexturePath, sizeof(terrainOptions->albedoTexturePath), "media/terrain/C14.png");
+	strcpy_s(terrainOptions->heightTexturePath, sizeof(terrainOptions->heightTexturePath), "media/terrain/D14.png");
+	strcpy_s(terrainOptions->collisionHeightTexturePath, sizeof(terrainOptions->heightTexturePath), "media/terrain/D14.png");
+	strcpy_s(terrainOptions->collisionMaskTexturePath, sizeof(terrainOptions->collisionMaskTexturePath), "media/terrain/D14.png");
+	
+	//yo low-key forgot why
+	spriteAnimation->update(0.1f);
+
+	text = Thsan::Text::create();
+	text->setFont(font);
+
+	text->setColor(tsm::Color(255, 0, 255));
+	text->setString(U"abcdefghijklmnopqrstuvwxyzéèâêô,.é;`^¸?!/$%?&*()! 0 123456789-=ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+
+	text->setScale(glm::vec3(0.75f, 2.0, 0.f));
+	text->setPosition(glm::vec3(50.f, 50.f, 0.f));
+	text->rotate(glm::vec3(0.f, 0.f, 1.f), 45.f);
+}
+
+void CoolStuffState::onExit() 
+{
 
 }
 
-void CoolStuffState::input(const float& deltaTime, std::vector<ts::InputAction> inputActions)
+void CoolStuffState::onSuspend() 
 {
+
+}
+
+void CoolStuffState::onResume()
+{
+
+}
+
+
+void CoolStuffState::onInit()
+{
+	//make a default if not exist
+	view = Thsan::View::create(0, 0, 800, 768, 300.f, 1.f, 0.f);
+	view->setZoom(1.f);
+	terrainOptions = &this->getParent()->options.renderOptions.terrainOptions;
+	parent->disableDebugUI();
+
+	terrainOptions->position[0] = 0.0f;
+	terrainOptions->position[1] = 190.5f;
+	terrainOptions->position[2] = 70.0f;
+
+	terrainOptions->normalBlurr[0] = 0.0f;
+	terrainOptions->normalBlurr[1] = 0.0f;
+
+	// Initialize other members
+	terrainOptions->terrainSize = 2048;
+
+	terrainOptions->normalBlurIteration = 0;
+	terrainOptions->LOD = 0.0f;
+	terrainOptions->LODStartAt = 100.f;
+	terrainOptions->angle = 0.0f;
+	terrainOptions->horizon = 100.0f;
+	terrainOptions->scaleHeight = 256.f;
+	terrainOptions->spriteRenderDistance = 300.0f;
+	terrainOptions->terrainRenderDistance = 300.0f;
+	terrainOptions->shininess = 0.0f;
+	terrainOptions->blurType = 0;
+
+	strcpy_s(terrainOptions->albedoTexturePath, sizeof(terrainOptions->albedoTexturePath), "media/terrain/fissure/terrain_color.png");
+	strcpy_s(terrainOptions->heightTexturePath, sizeof(terrainOptions->heightTexturePath), "media/terrain/fissure/terrain.png");
+	strcpy_s(terrainOptions->collisionHeightTexturePath, sizeof(terrainOptions->heightTexturePath), "media/terrain/fissure/terrain_height.png");
+	strcpy_s(terrainOptions->collisionMaskTexturePath, sizeof(terrainOptions->collisionMaskTexturePath), "media/terrain/fissure/terrain_mask.png");
+
+
+	parent->add(ts::Key::A, ts::InputState::isPressed, ts::InputAction::left);
+	parent->add(ts::Key::S, ts::InputState::isPressed, ts::InputAction::down);
+	parent->add(ts::Key::W, ts::InputState::isPressed, ts::InputAction::up);
+	parent->add(ts::Key::D, ts::InputState::isPressed, ts::InputAction::right);
+	parent->add(ts::Key::P, ts::InputState::isPressed, ts::InputAction::run);
+	parent->add(ts::Key::P, ts::InputState::isReleased, ts::InputAction::stop_run);
+	parent->add(ts::Key::E, ts::InputState::isPressed, ts::InputAction::rotateLeft);
+	parent->add(ts::Key::Q, ts::InputState::isPressed, ts::InputAction::rotateRight);
+	parent->add(ts::Key::O, ts::InputState::isPressed, ts::InputAction::aim);
+	parent->add(ts::Key::O, ts::InputState::isReleased, ts::InputAction::stop_aim);
+	parent->add(ts::Key::Space, ts::InputState::isPressedNoRepeat, ts::InputAction::jump);
+	parent->add(ts::Key::Return, ts::InputState::isPressedNoRepeat, ts::InputAction::select);
+	parent->add(ts::Key::L, ts::InputState::isPressedNoRepeat, ts::InputAction::action);
+	parent->add(ts::Key::K, ts::InputState::isPressedNoRepeat, ts::InputAction::attack);
+}
+
+void CoolStuffState::onInput(const float& deltaTime, std::vector<ts::InputAction> inputActions)
+{
+	gui->handleEvent(inputActions);
+
 	static float x = 0.f;
 	static float y = 0.f;
 	static float r = 0.f;
 	static float t = 0.f;
 	static float z = 1.f;
+
+	view->setZoom(z);
+	view->setRotation(r);
+	view->setPosition(0, 0);
+
 	for (ts::InputAction i : inputActions) {
 		if (i == Thsan::InputAction::left)
-			x += -200 * deltaTime;
-		if (i == Thsan::InputAction::right)
-			x += 200 * deltaTime;
-		if (i == Thsan::InputAction::up)
-			y += -200 * deltaTime;
-		if (i == Thsan::InputAction::down)
-			y += 200 * deltaTime;
-		if (i == Thsan::InputAction::rotateLeft)
-			r += 1 * deltaTime;
-		if (i == Thsan::InputAction::rotateRight)
-			r -= 1 * deltaTime;
-		if (i == Thsan::InputAction::action)
-			z -= 1 * deltaTime;
-		if (i == Thsan::InputAction::select)
-			z += 1 * deltaTime;
+			positioOnTerrain.x += 1.5f;
 
-		parent->trace("x: " + std::to_string(x) + ", y: " + std::to_string(y));
+		if (i == Thsan::InputAction::right)
+			positioOnTerrain.x -= 1.5f;
+
+		if (i == Thsan::InputAction::up) {
+			positioOnTerrain.y += 1.5f;
+		}
+		if (i == Thsan::InputAction::down)
+			positioOnTerrain.y -= 1.5f;
+
+		if (i == Thsan::InputAction::rotateLeft)
+			positioOnTerrain.z += 1.5;
+		if (i == Thsan::InputAction::rotateRight)
+			positioOnTerrain.z -= 1.5;
+		if (i == Thsan::InputAction::action) {
+			terrainOptions->scaleHeight += 1.1f;
+		}
+		if (i == Thsan::InputAction::select)
+			terrainOptions->scaleHeight -= 1.1f;
 	}
 
 	t += 10.f * deltaTime;
-
-	spriteAnimation->setPosition(glm::vec3(x, y, 0.f));
-	view->setZoom(z);
-	view->setRotation(r);
-	view->setPosition(x - 400, y - 300);
-	renderstates->setView(view);
-
 }
 
-void CoolStuffState::update(const float& deltaTime)
+void CoolStuffState::onUpdate(const float& deltaTime)
 {
 	static float t = 0.f;
 	t += deltaTime;
-
 	spriteAnimation->update(deltaTime);
+	terrainOptions->LOD = 0.0f;
+	terrainOptions->LODStartAt = 0.0f;
+	float y = spriteAnimation->getFrameHeight()/2.f;
+	float x = spriteAnimation->getFrameWidth()/2.f;
+
+	spriteAnimation->setExternalTransform(positioOnTerrain, glm::vec2(1.f, 1.f), 45.f);
+
+	gui->update(deltaTime);
 }
 
-void CoolStuffState::draw(ts::RenderManager* target, const float& deltaTime)
+void CoolStuffState::onDraw(ts::RendererTerrain& target, const float& deltaTime)
 {
-	target->setState(renderstates);
+	static bool first = true;
 
-	target->add(spriteAnimation);
-	target->add(tilemap);
-
-	target->display();
-
-	target->remove(spriteAnimation);
-	target->remove(tilemap);
+	if (first)
+	{
+		target.add(spriteAnimation);
+		first = false;
+	}
+	target.display();
 }
 
+void CoolStuffState::onDraw(ts::Renderer2D& target, const float& deltaTime)
+{
+	bool first_time = true;
+	if (first_time)
+	{
+		target.setGui(gui);
+		first_time = false;
+	}
+	target.setView(view);
+
+	target.add(tilemap);
+	target.add(text);
+	target.display();
+	target.remove(tilemap);
+	target.remove(text);
+}

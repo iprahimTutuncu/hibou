@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{0a9a0b7f-1e8c-4982-b85e-4769a55bebaa}</ProjectGuid>
+    <RootNamespace>farmville</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>farmville</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NOMINMAX;TS_PLATFORM_WINDOWS;TS_CONFIG_DEBUG;TS_CLIENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)vendor\octree;$(ProjectDir)vendor\glm\glm;$(ProjectDir)vendor\thsan\include;$(ProjectDir)vendor\vendor\entt</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)vendor\thsan\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Thsan.lib</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\Thsan\Thsan.dll" "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\" /Y /I
+xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\Thsan\Thsan.lib"  "$(SolutionDir)$(ProjectName)\lib" /Y /I
+xcopy /E /I /Y "$(ProjectDir)media" "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\media\"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>TS_PLATFORM_WINDOWS;TS_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)vendor\octree;$(ProjectDir)vendor\glm\glm;$(ProjectDir)vendor\thsan\include;$(ProjectDir)vendor\entt</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)vendor\thsan\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Thsan.lib</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\Thsan\Thsan.dll" "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\" /Y /I
+xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\Thsan\Thsan.lib"  "$(SolutionDir)$(ProjectName)\lib" /Y /I
+xcopy /E /I /Y "$(ProjectDir)media" "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\media\"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="media\compute_shader\terrainVisibility.cs" />
+    <None Include="media\compute_shader\test.cs" />
+    <None Include="media\shader\render2D\gui.frag" />
+    <None Include="media\shader\render2D\gui.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\core\collision_engine\collision_engine.cpp" />
+    <ClCompile Include="src\core\game_object\component\input_component.cpp" />
+    <ClCompile Include="src\core\game_object\game_object.cpp" />
+    <ClCompile Include="src\core\scene.cpp" />
+    <ClCompile Include="src\game_object\camera\camera_render_component.cpp" />
+    <ClCompile Include="src\game_object\player\command\jump_command.cpp" />
+    <ClCompile Include="src\game_object\player\command\move_down_command.cpp" />
+    <ClCompile Include="src\game_object\player\command\move_left_command.cpp" />
+    <ClCompile Include="src\game_object\player\command\move_right_command.cpp" />
+    <ClCompile Include="src\game_object\player\command\move_up_command.cpp" />
+    <ClCompile Include="src\game_object\player\command\rotate_left_command.cpp" />
+    <ClCompile Include="src\game_object\player\command\rotate_right_command.cpp" />
+    <ClCompile Include="src\game_object\player\command\run_command.cpp" />
+    <ClCompile Include="src\game_object\player\command\stop_run_command.cpp" />
+    <ClCompile Include="src\game_object\player\player_input_component.cpp" />
+    <ClCompile Include="src\game_object\player\player_physic_component.cpp" />
+    <ClCompile Include="src\game_object\player\player_sprite_render_component.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\state\farmville_state.cpp" />
+    <ClCompile Include="src\state\cool_stuff_state.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\core\collision_engine\collision_engine.h" />
+    <ClInclude Include="src\core\game_object\component\input\command.h" />
+    <ClInclude Include="src\core\game_object\component\input_component.h" />
+    <ClInclude Include="src\core\game_object\component\native_script_component.h" />
+    <ClInclude Include="src\core\game_object\component\physic_component.h" />
+    <ClInclude Include="src\core\game_object\component\render_component.h" />
+    <ClInclude Include="src\core\game_object\data\data.h" />
+    <ClInclude Include="src\core\game_object\data\data_holder.h" />
+    <ClInclude Include="src\core\game_object\game_object.h" />
+    <ClInclude Include="src\core\scene.h" />
+    <ClInclude Include="src\game_object\camera\camera_render_component.h" />
+    <ClInclude Include="src\game_object\player\command\jump_command.h" />
+    <ClInclude Include="src\game_object\player\command\move_down_command.h" />
+    <ClInclude Include="src\game_object\player\command\move_left_command.h" />
+    <ClInclude Include="src\game_object\player\command\move_right_command.h" />
+    <ClInclude Include="src\game_object\player\command\move_up_command.h" />
+    <ClInclude Include="src\game_object\player\command\rotate_left_command.h" />
+    <ClInclude Include="src\game_object\player\command\rotate_right_command.h" />
+    <ClInclude Include="src\game_object\player\command\run_command.h" />
+    <ClInclude Include="src\game_object\player\command\stop_run_command.h" />
+    <ClInclude Include="src\game_object\player\player_input_component.h" />
+    <ClInclude Include="src\game_object\player\player_physic_component.h" />
+    <ClInclude Include="src\game_object\player\player_sprite_render_component.h" />
+    <ClInclude Include="src\state\farmville_state.h" />
+    <ClInclude Include="src\state\cool_stuff_state.h" />
+    <ClInclude Include="vendor\entt\entt.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

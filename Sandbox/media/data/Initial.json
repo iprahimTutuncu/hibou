@@ -1,0 +1,96 @@
+{
+  "Players": [
+    {
+      "PlayerID": 1,
+      "Name": "Helena",
+      "Level": 5,
+      "ExperiencePoints": 1500
+    },
+    {
+      "PlayerID": 2,
+      "Name": "Bob",
+      "Level": 3,
+      "ExperiencePoints": 800
+    }
+  ],
+  "Crops": [
+    {
+      "CropID": 1,
+      "Name": "Wheat",
+      "BaseGrowthTime": 7,
+      "HarvestYield": 10
+    },
+    {
+      "CropID": 2,
+      "Name": "Corn",
+      "BaseGrowthTime": 10,
+      "HarvestYield": 15
+    }
+  ],
+  "Soil": [
+    {
+      "SoilID": 1,
+      "SoilType": "Loamy"
+    },
+    {
+      "SoilID": 2,
+      "SoilType": "Clay"
+    }
+  ],
+  "SoilColors": [
+    {
+      "SoilColorID": 1,
+      "SoilID": 1,
+      "Color": "#8B4513"
+    },
+    {
+      "SoilColorID": 2,
+      "SoilID": 2,
+      "Color": "#A52A2A"
+    }
+  ],
+  "SoilImpact": [
+    {
+      "SoilImpactID": 1,
+      "SoilID": 1,
+      "CropID": 1,
+      "GrowthTimeFactor": 0.9
+    },
+    {
+      "SoilImpactID": 2,
+      "SoilID": 1,
+      "CropID": 2,
+      "GrowthTimeFactor": 1.0
+    },
+    {
+      "SoilImpactID": 3,
+      "SoilID": 2,
+      "CropID": 1,
+      "GrowthTimeFactor": 1.1
+    },
+    {
+      "SoilImpactID": 4,
+      "SoilID": 2,
+      "CropID": 2,
+      "GrowthTimeFactor": 1.2
+    }
+  ],
+  "PlayerActivities": [
+    {
+      "ActivityID": 1,
+      "PlayerID": 1,
+      "SoilID": 1,
+      "CropID": 1,
+      "ActivityType": "Planting",
+      "ActivityDate": "2024-09-01"
+    },
+    {
+      "ActivityID": 2,
+      "PlayerID": 2,
+      "SoilID": 2,
+      "CropID": 2,
+      "ActivityType": "Harvesting",
+      "ActivityDate": "2024-09-05"
+    }
+  ]
+}

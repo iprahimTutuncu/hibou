@@ -1,17 +1,29 @@
 #pragma once
-#include <thsan/state/State.h>
+#include <thsan/state/state.h>
+#include <thsan/graphics/terrain/terrain.h>
 
 #define ts Thsan
+#define ui Thsan::UI
+
+namespace ui 
+{
+	class Gui;
+	class LabelButton;
+	class Panel;
+}
 
 namespace ts {
-	class Mesh;
 	class Shader;
 	class Texture2D;
 	class Framebuffer;
-	class RenderStates2D;
+	class RenderStates;
 	class Tilemap;
 	class View;
 	class SpriteAnimation;
+	class Terrain;
+	class ComputeShader;
+	class OnTerrainModifier;
+	class Text;
 }
 
 namespace tsm {
@@ -25,25 +37,35 @@ public:
 	CoolStuffState(ts::Game* parent);
 	~CoolStuffState() = default;
 
-
 	// Inherited via State
-	virtual void init() override;
+	virtual void onInit() override;
+	virtual void onStart() override;
+	virtual void onExit() override;
+	virtual void onSuspend() override;
+	virtual void onResume() override;
 
-	virtual void input(const float& deltaTime, std::vector<ts::InputAction> inputActions) override;
-
-	virtual void update(const float& deltaTime) override;
-
-	virtual void draw(ts::RenderManager* target, const float& deltaTime) override;
+	virtual void onInput(const float& deltaTime, std::vector<ts::InputAction> inputActions) override;
+	virtual void onUpdate(const float& deltaTime) override;
+	virtual void onDraw(ts::Renderer2D& target, const float& deltaTime) override;
+	virtual void onDraw(ts::RendererTerrain& target, const float& deltaTime) override;
 
 private:
-	std::shared_ptr<ts::Mesh> mesh;
+	glm::vec3 positioOnTerrain;
+
 	std::shared_ptr<ts::Shader> shader;
+	std::shared_ptr<ts::Text> text;
 	std::shared_ptr<ts::Texture2D> sprite_texture;
 	std::shared_ptr<ts::Texture2D> tilemap_texture;
-	std::shared_ptr<ts::RenderStates2D> renderstates;
 	std::shared_ptr<ts::Tilemap> tilemap;
 	std::shared_ptr<ts::View> view;
 	std::shared_ptr<ts::SpriteAnimation> spriteAnimation;
+	std::shared_ptr<ts::ComputeShader> computeShaderTest;
+	std::shared_ptr<ui::Gui> gui;
+	std::shared_ptr<ui::Panel> panel;
+	std::shared_ptr<ui::LabelButton> bttnPlay;
+	std::shared_ptr<ui::LabelButton> bttnQuit;
 	std::shared_ptr<tsm::AbstractCamera> freeCamera;
 	std::shared_ptr<tsm::Transform> transform;
+
+	ts::TerrainOptions* terrainOptions;
 };

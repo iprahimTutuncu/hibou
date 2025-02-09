@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "color.h"
+#include "tsm/math/color.h"
 #include <iostream>
 #include <algorithm>
 #include <cmath>
@@ -71,15 +71,6 @@ namespace tsm {
         );
     }
 
-    Thsan::vec4f Color::toVec4f() const
-    {
-        return Thsan::vec4f{static_cast<float>(red) / 255.0f,
-            static_cast<float>(green) / 255.0f,
-            static_cast<float>(blue) / 255.0f,
-            static_cast<float>(alpha) / 255.0f
-        };
-    }
-
     // Print the color
     void Color::log() const {
         TS_CORE_INFO("RGBA: ( {}, {} , {}, {}", static_cast<int>(red), static_cast<int>(green), static_cast<int>(blue), static_cast<int>(alpha));
@@ -92,16 +83,6 @@ namespace tsm {
         uint8_t green = static_cast<uint8_t>(vec4Color.g * 255.0f);
         uint8_t blue = static_cast<uint8_t>(vec4Color.b * 255.0f);
         uint8_t alpha = static_cast<uint8_t>(vec4Color.a * 255.0f);
-
-        return Color(red, green, blue, alpha);
-    }
-
-    Color Color::fromVec4f(const Thsan::vec4f& vec4fColor)
-    {
-        uint8_t red = static_cast<uint8_t>(vec4fColor.x * 255.0f);
-        uint8_t green = static_cast<uint8_t>(vec4fColor.y * 255.0f);
-        uint8_t blue = static_cast<uint8_t>(vec4fColor.z * 255.0f);
-        uint8_t alpha = static_cast<uint8_t>(vec4fColor.w * 255.0f);
 
         return Color(red, green, blue, alpha);
     }

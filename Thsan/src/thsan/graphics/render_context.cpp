@@ -1,16 +1,29 @@
 #include "pch.h"
-#include "render_context.h"
-#include "render_states.h"
-#include "render_target.h"
-#include "render_command.h"
-#include "framebuffer.h"
+#include "thsan/graphics/render_context.h"
+#include "thsan/graphics/render_states.h"
+#include "thsan/graphics/render_target.h"
+#include "thsan/graphics/render_command.h"
+#include "thsan/graphics/framebuffer.h"
 #include <thsan/log.h>
 #include <GL/glew.h>
 #include <platform/openGL/gl_helper.h>
 
+
+namespace Thsan
+{
+    int RenderContext::x{ 0 };
+    int RenderContext::y{ 0 };
+    int RenderContext::w{ 800 };
+    int RenderContext::h{ 600 };
+
+    std::queue<std::unique_ptr<RenderCmd::Command>> RenderContext::commandList;
+    std::weak_ptr<Framebuffer> RenderContext::curr_fb;
+    std::weak_ptr<RenderStates> RenderContext::curr_state;
+    std::shared_ptr<RenderTarget> RenderContext::target = Thsan::RenderTarget::create();
+}
+
 bool Thsan::RenderContext::init()
 {
-    target = Thsan::create_renderTarget();
     target->init();
     return target != nullptr;
 }
@@ -38,7 +51,7 @@ void Thsan::RenderContext::setViewport(int x, int y, int w, int h)
 
 void Thsan::RenderContext::setDefaultViewport(int x, int y, int w, int h)
 {
-    
+    // lol
 }
 
 void Thsan::RenderContext::setState(std::shared_ptr<RenderStates> state)
@@ -79,4 +92,3 @@ void Thsan::RenderContext::flush()
         commandList.pop();
     }
 }
-

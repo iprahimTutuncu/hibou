@@ -21,7 +21,7 @@
     <ClCompile Include="src\state\cool_stuff_state.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ressource_manager\texture2D_manager.cpp">
+    <ClCompile Include="src\state\film_edit_state.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,8 +29,18 @@
     <ClInclude Include="src\state\cool_stuff_state.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ressource_manager\texture2D_manager.h">
+    <ClInclude Include="src\state\cool_stuff_state.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\state\film_edit_state.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="media\compute_shader\test.cs" />
+    <None Include="media\compute_shader\terrainVisibility.cs" />
+    <None Include="media\shader\render2D\gui.frag" />
+    <None Include="media\shader\render2D\gui.vert" />
+    <None Include="media\compute_shader\traceFilm.cs" />
   </ItemGroup>
 </Project>

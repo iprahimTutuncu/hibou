@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "gl_shader.h"
-#include "gl_helper.h"
+#include "platform/openGL/gl_shader.h"
+#include "platform/openGL/gl_helper.h"
 #include <GL/glew.h>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -52,16 +52,33 @@ namespace Thsan {
 
 		if (status == GL_TRUE)
 		{
+			GLint status;
 			char error_log[512];
-			GL_CHECK(glLinkProgram(program_id));
-			GL_CHECK(glValidateProgram(program_id));
 
+			// Link the program
+			GL_CHECK(glLinkProgram(program_id));
+
+			// Check linking status
 			GL_CHECK(glGetProgramiv(program_id, GL_LINK_STATUS, &status));
 			if (status != GL_TRUE) {
 				GL_CHECK(glGetProgramInfoLog(program_id, sizeof(error_log), nullptr, error_log));
-				TS_CORE_ERROR("Program compilation error: {}\n", error_log);
+				TS_CORE_ERROR("\nProgram linking error :\n{}", error_log);
 				GL_CHECK(glDeleteProgram(program_id));
-				program_id = -1;
+				program_id = 0; // Use 0 to indicate an error
+				return;
+			}
+
+			// Validate the program
+			GL_CHECK(glValidateProgram(program_id));
+
+			// Check validation status
+			GL_CHECK(glGetProgramiv(program_id, GL_VALIDATE_STATUS, &status));
+			if (status != GL_TRUE) {
+				GL_CHECK(glGetProgramInfoLog(program_id, sizeof(error_log), nullptr, error_log));
+				TS_CORE_ERROR("\nProgram validation error :\n{}", error_log);
+				GL_CHECK(glDeleteProgram(program_id));
+				program_id = 0; // Use 0 to indicate an error
+				return;
 			}
 		}
 
@@ -81,6 +98,7 @@ namespace Thsan {
 		for (int i = 0; i < uniform_texture_ids.size(); i++) {
 			auto& value = uniform_texture_ids[i];
 			std::shared_ptr<Texture2D> tex2D = value.first.lock();
+			GL_CHECK(glUniform1i(value.second, i));
 			tex2D->bind(i);
 		}
 	}
@@ -90,19 +108,19 @@ namespace Thsan {
 		texture_count = 0;
 	}
 
-	void GLShader::setUniformBool(const std::string& name, bool value)
+	void GLShader::setBool(const std::string& name, bool value)
 	{
 		GL_CHECK(glUseProgram(program_id));
 		GL_CHECK(glUniform1i(getUniformId(name), static_cast<int>(value)));
 	}
 
-	void GLShader::setUniformInt(const std::string& name, int value)
+	void GLShader::setInt(const std::string& name, int value)
 	{
 		GL_CHECK(glUseProgram(program_id));
 		GL_CHECK(glUniform1i(getUniformId(name), value));
 	}
 
-	void GLShader::setUniformFloat(const std::string& name, float value)
+	void GLShader::setFloat(const std::string& name, float value)
 	{
 		GL_CHECK(glUseProgram(program_id));
 		GL_CHECK(glUniform1f(getUniformId(name), value));
@@ -126,6 +144,12 @@ namespace Thsan {
 		GL_CHECK(glUniform4fv(getUniformId(name), 1, glm::value_ptr(value)));
 	}
 
+	void GLShader::setVec2(const std::string& name, glm::vec2 value)
+	{
+		GL_CHECK(glUseProgram(program_id));
+		GL_CHECK(glUniform2fv(getUniformId(name), 1, glm::value_ptr(value)));
+	}
+
 	void GLShader::setVec3(const std::string& name, glm::vec3 value)
 	{
 		GL_CHECK(glUseProgram(program_id));
@@ -146,7 +170,6 @@ namespace Thsan {
 		}
 
 		uniform_texture_ids.push_back(std::make_pair(tex2D, texture_unif_Loc));
-		GL_CHECK(glUniform1i(texture_unif_Loc, texture_count++));
 	}
 
 	int GLShader::getUniformId(const std::string& name) 

@@ -1,15 +1,15 @@
 #include "pch.h"
 
-#include "window.h"
+#include <thsan/window.h>
 #include "SDL.h"
-#include "log.h"
+#include <thsan/log.h>
 
 #include <GL/glew.h>
 #include <SDL_vulkan.h>
 
-#include "thsan/graphics/graphic_api.h"
-#include "thsan/graphics/framebuffer.h"
-#include "thsan/game.h"
+#include <thsan/graphics/graphic_api.h>
+#include <thsan/graphics/framebuffer.h>
+#include <thsan/game.h>
 
 #include "thsan/Input/event.h"
 

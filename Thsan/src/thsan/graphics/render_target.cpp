@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "render_target.h"
+#include "thsan/graphics/render_target.h"
 #include "thsan/graphics/graphic_api.h"
 #include "thsan/graphics/drawable.h"
 #include "platform/openGL/gl_render_target.h"
@@ -7,7 +7,7 @@
 
 namespace Thsan {
 
-    std::shared_ptr<RenderTarget> create_renderTarget()
+    std::shared_ptr<RenderTarget> RenderTarget::create()
     {
         switch (get_graphic_API())
         {
@@ -19,14 +19,16 @@ namespace Thsan {
         TS_CORE_ERROR("error: RenderTarget not supported for the current graphic API");
         return nullptr;
     }
-    void RenderTarget::draw(const Mesh& mesh, RenderStates2D& states) const
+    void RenderTarget::draw(const Mesh& mesh, RenderStates& states) const
     {
         states.bind();
         draw(mesh);
         states.unBind();
     }
-    void RenderTarget::draw(const Drawable& drawable, RenderStates2D& states) const
+
+    void RenderTarget::draw(const Drawable& drawable, RenderStates& states) const
     {
-        drawable.draw(*this, states);
+        if(!drawable.isHidden())
+            drawable.draw(*this, states);
     }
 }

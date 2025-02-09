@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "texture.h"
+#include "thsan/graphics/texture.h"
 #include "thsan/log.h"
 #include "thsan/graphics/graphic_api.h"
 #include "platform/openGL/gl_texture2D.h"
@@ -34,7 +34,7 @@ namespace Thsan {
         return repeated;
     }
 
-    std::shared_ptr<Texture2D> create_texture2D()
+    std::shared_ptr<Texture2D> Texture2D::create()
     {
         switch (get_graphic_API())
         {

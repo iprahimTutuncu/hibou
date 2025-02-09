@@ -79,21 +79,24 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NOMINMAX;TS_PLATFORM_WINDOWS;TS_CONFIG_DEBUG;TS_CLIENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\src;$(SolutionDir)Thsan\src\vendor\spdlog\include;$(SolutionDir)Thsan\src\vendor\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)vendor\glm\glm;$(ProjectDir)vendor\thsan\include</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Thsan.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)vendor\thsan\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\Thsan\Thsan.dll" "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\" /Y /I
+xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\Thsan.lib" "$(SolutionDir)SandBox\vendor\thsan\lib" /Y /I /E
 xcopy /E /I /Y "$(ProjectDir)media" "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\media\"
+
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -102,19 +105,23 @@ xcopy /E /I /Y "$(ProjectDir)media" "$(SolutionDir)bin\$(Configuration)-$(Platfo
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>TS_PLATFORM_WINDOWS;TS_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\src\vendor\spdlog\include;$(SolutionDir)Thsan\src;$(SolutionDir)Thsan\src\vendor\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)vendor\glm\glm;$(ProjectDir)vendor\thsan\include</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Thsan.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)vendor\thsan\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\Thsan\Thsan.dll" "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\" /Y /I
+xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\Thsan.lib" "$(SolutionDir)SandBox\vendor\thsan\lib" /Y /I /E
 xcopy /E /I /Y "$(ProjectDir)media" "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\media\"
+
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -123,7 +130,7 @@ xcopy /E /I /Y "$(ProjectDir)media" "$(SolutionDir)bin\$(Configuration)-$(Platfo
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>TS_PLATFORM_WINDOWS;TS_DISTRIBUTION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Thsan\vendor\spdlog\include;$(SolutionDir)ThsanMath\src;$(SolutionDir)Thsan\src;$(SolutionDir)Thsan\vendor\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)vendor\thsan\include</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -132,17 +139,21 @@ xcopy /E /I /Y "$(ProjectDir)media" "$(SolutionDir)bin\$(Configuration)-$(Platfo
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Thsan.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)vendor\thsan\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\Thsan\Thsan.dll" "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\" /Y /I
+xcopy "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\Thsan.lib" "$(SolutionDir)SandBox\vendor\thsan\lib" /Y /I /E
 xcopy /E /I /Y "$(ProjectDir)media" "$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\media\"
+
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\ressource_manager\texture2D_manager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\state\cool_stuff_state.cpp" />
+    <ClCompile Include="src\state\film_edit_state.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Thsan\Thsan.vcxproj">
@@ -150,8 +161,15 @@ xcopy /E /I /Y "$(ProjectDir)media" "$(SolutionDir)bin\$(Configuration)-$(Platfo
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ressource_manager\texture2D_manager.h" />
     <ClInclude Include="src\state\cool_stuff_state.h" />
+    <ClInclude Include="src\state\film_edit_state.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="media\compute_shader\terrainVisibility.cs" />
+    <None Include="media\compute_shader\test.cs" />
+    <None Include="media\compute_shader\traceFilm.cs" />
+    <None Include="media\shader\render2D\gui.frag" />
+    <None Include="media\shader\render2D\gui.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

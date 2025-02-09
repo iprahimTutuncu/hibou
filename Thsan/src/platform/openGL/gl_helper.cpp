@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "gl_helper.h"
+#include "platform/openGL/gl_helper.h"
 #include "thsan/log.h"
 #include <GL/glew.h>
 

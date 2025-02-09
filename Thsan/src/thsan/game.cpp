@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "Game.h"
-#include "log.h"
+#include "thsan/game.h"
+#include "thsan/log.h"
 #include "thsan/Input/keyboard.h"
 #include "SDL.h"
 #include "platform/SDL/sdl_window.h"
@@ -8,61 +8,96 @@
 #include <GL/glew.h>
 #include "thsan/graphics/render_target.h"
 #include "thsan/graphics/render_command.h"
-#include "thsan/graphics/render_manager.h"
+#include "thsan/graphics/renderer/renderer_2D.h"
+#include "thsan/graphics/renderer/renderer_terrain.h"
+#include "thsan/graphics/render_context.h"
 #include "thsan/graphics/mesh.h"
 #include "thsan/graphics/shader.h"
 #include "thsan/graphics/framebuffer.h"
 #include "thsan/graphics/graphic_api.h"
+#include "thsan/state/state_manager.h"
 #include "thsan/state/State.h"
+#include "thsan/ressource_manager/texture2D_manager.h"
 #include <SDL.h>
 #include <GL/gl.h>
+#include <tsm/math/color.h>
 
 std::chrono::duration<double> frameDuration;
 
-namespace Thsan {
-
-	LogManager Game::logManager;
-
+namespace Thsan 
+{
 	Game::Game():
 		isInit{false}
 	{
+		options.windowOptions.screenWidth = 1280;
+		options.windowOptions.screenHeight = 768;
+
+		prevWidth = options.windowOptions.screenWidth;
+		prevHeight = options.windowOptions.screenHeight;
 	}
 
 	Game::~Game()
 	{
-		if(renderManager)
-			delete renderManager;
+		if(renderer2D)
+			delete renderer2D;
+		if(rendererTerrain)
+			delete rendererTerrain;
 		if (window)
 			delete window;
+	}
+
+	StateManager& Game::getStateManager()
+	{
+		return *stateManager;
 	}
 
 	bool Game::init()
 	{
 		TS_CORE_ASSERT(!isInit, "Game is already initialized, attemp of calling Game::init() more than once is a bad idea, call Game::close() before if you really need to frl.");
 		if (!isInit) {
-			logManager.init();
 			Keyboard::init();
 			getInfo();
 
 			window = new SDLWindow();
-
-			if (!window->create(800, 600, "mon jeux"))
+			if (!window->create(options.windowOptions.screenWidth, options.windowOptions.screenHeight, "mon jeux"))
 				return false;
 
-			renderManager = create_renderManager();
-			renderManager->init();
+			RenderContext::init();
+
+			rendererTerrain = RendererTerrain::create();
+			renderer2D = Renderer2D::create();
+
+			stateManager = StateManager::create();
+			stateManager->init(this);
+
 			isInit = true;
 
 			controlSetting = new ControlSetting();
+
+			debugHUDManager = new DebugHUDManager(window);
 		}
 
 		return true;
 	}
 
-	void Game::run() {
+	void Game::run() 
+	{
 		this->init();
 		onCreate();
-		state->init();
+
+		if (stateManager->currentState == "")
+		{
+			TS_CORE_TRACE("currently no state is set, exiting application.");
+			return;
+		}
+
+		if(options.renderOptions.enableRendererTerrain)
+			rendererTerrain->init(options.renderOptions.terrainOptions, options.windowOptions);
+		renderer2D->init();
+
+		State& state = stateManager->getCurrentState();
+
+		state.onStart();
 
 		onUICreate();
 
@@ -79,13 +114,25 @@ namespace Thsan {
 			currentTime = newTime;
 
 			//calculate time in seccond
-			float deltaTime = frameTime.count();
+			float deltaTime = static_cast<float>(frameTime.count());
+
+			int w = options.windowOptions.screenWidth;
+			int h = options.windowOptions.screenHeight;
+
+			if (prevWidth != w || prevHeight != h)
+			{
+				window->setSize(w, h);
+			}
+
+			prevWidth = w;
+			prevHeight = h;
 
 			// Add the frame time to the accumulator
 			accumulator += frameTime;
 			while (accumulator >= frameDuration) {
-				update(deltaTime);
-				draw(deltaTime);
+
+				update(static_cast<float>(frameDuration.count()));
+				draw(static_cast<float>(frameDuration.count()));
 
 				accumulator -= frameDuration;
 
@@ -93,38 +140,56 @@ namespace Thsan {
 					onUIRender();
 
 				window->swapBuffers();
+
 			}
-			//imgui specfific
 
 			std::this_thread::sleep_for(std::chrono::duration<double>(1.0 / targetFrameRate));
 		}
 
+
+		if (stateManager)
+			delete stateManager;
 	}
 
 	void Game::update(const float& dt)
 	{
 		std::vector<Event> events = window->pollEvent();
-		for(Event e: events)
+
+		for (Event e : events) {
 			controlSetting->handleInput(e);
+		}
 		controlSetting->updateInput();
 
 		std::vector<InputAction> inputActions = controlSetting->getInput();
-		state->input(dt, inputActions);
-		if (state)
-			state->update(dt);
+		stateManager->getCurrentState().onInput(dt, inputActions);
+		stateManager->getCurrentState().onUpdate(dt);
 	}
 
 	void Game::draw(const float& dt)
 	{
-		if (state)
-			state->draw(renderManager, dt);
+		if (options.renderOptions.enableRendererTerrain) 
+		{
+			rendererTerrain->updateTerrainOptions(options.renderOptions.terrainOptions, options.windowOptions);
+			rendererTerrain->enableDebug(options.renderOptions.debugRender);
+
+			stateManager->getCurrentState().onDraw(*rendererTerrain, dt);
+		}
+		stateManager->getCurrentState().onDraw(*renderer2D, dt);
+
+		//imgui specfific
+		if (isDebugUIEnable)
+		{
+			debugHUDManager->render();    // Render debug panels
+		}
 	}
 
 	bool Game::close()
 	{
-		renderManager->close();
+		debugHUDManager->shutdown();
+		if (options.renderOptions.enableRendererTerrain)
+			rendererTerrain->close();
+		renderer2D->close();
 		window->close();
-		logManager.close();
 		isInit = false;
 		return true;
 	}
@@ -164,12 +229,28 @@ namespace Thsan {
 
 	void Game::enableDebugUI()
 	{
+		window->enableEventForHUD();
 		isDebugUIEnable = true;
 	}
 
 	void Game::disableDebugUI()
 	{
 		isDebugUIEnable = false;
+	}
+
+	std::variant<float, glm::vec3, tsm::Color> Game::sampleTerrain(TerrainDataType type, glm::vec2 position)
+	{
+		return rendererTerrain->sampleTerrain(type, position);
+	}
+
+	std::shared_ptr<Thsan::Texture2D> Game::getTexture(const std::string& name)
+	{
+		return RessourceManager::Texture2DManager::get(name);
+	}
+
+	void Game::removeUnused()
+	{
+		RessourceManager::Texture2DManager::removeUnused();
 	}
 
 	void Game::onUICreate()

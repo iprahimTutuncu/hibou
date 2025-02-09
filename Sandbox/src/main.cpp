@@ -1,25 +1,33 @@
 #include <thsan.h>
+#include <thsan/state/state_manager.h>
 #include "state/cool_stuff_state.h"
+#include "state/film_edit_state.h"
 
 class SandBox : public Thsan::Game
 {
 public:
-	SandBox() {
+	SandBox() 
+	{
+
 	}
 
-	~SandBox() {
-		logManager.close();
+	~SandBox() 
+	{
 	}
 
-	void onCreate() override {
-		state = new CoolStuffState(this);
+	void onCreate() override 
+	{
+		stateManager->registerState<FilmEditState>("FilmEditState");
+		while (!stateManager->isStateRegistered("FilmEditState"));
 	}
 
-	void onUICreate() override {
+	void onUICreate() override 
+	{
 		this->enableDebugUI();
 	}
 
-	void onUIRender () override {
+	void onUIRender () override 
+	{
 
 	}
 

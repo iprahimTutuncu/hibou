@@ -1,9 +1,8 @@
 #pragma once
 
-
 #include "pch.h"
 
-#include "sdl_window.h"
+#include "platform/SDL/sdl_window.h"
 #include "SDL.h"
 #include "thsan/log.h"
 
@@ -12,6 +11,7 @@
 #include "thsan/graphics/graphic_api.h"
 #include "thsan/graphics/framebuffer.h"
 #include "thsan/game.h"
+#include "platform/openGL/gl_imgui_handler_SDL.h"
 
 #include "thsan/Input/event.h"
 #include <set>
@@ -19,6 +19,7 @@
 #ifdef _WIN32
 #pragma comment(linker, "/subsystem:windows")
 #endif
+#include "imgui/backends/imgui_impl_sdl2.h"
 
 Thsan::SDLWindow::SDLWindow() {
 
@@ -29,7 +30,6 @@ Thsan::SDLWindow::~SDLWindow() {
 		close();
 	}
 }
-
 
 bool Thsan::SDLWindow::create(const int width, const int height, const char* title)
 {
@@ -97,6 +97,9 @@ std::vector<Thsan::Event> Thsan::SDLWindow::pollEvent() {
 	SDL_Event e;
 	while (SDL_PollEvent(&e))
 	{
+		if (isEventEnableForHUD)
+			ImGui_ImplSDL2_ProcessEvent(&e);
+
 		Event tmp_event;
 		if (e.type == SDL_QUIT) {
 			running = false;
@@ -157,8 +160,14 @@ bool Thsan::SDLWindow::createContextOpenGL()
 
 	TS_CORE_INFO("OpenGL - version {}.{}\n", major_version, minor_version);
 
+	if (SDL_GL_SetSwapInterval(1) < 0)
+	{
+		TS_CORE_ERROR("error: unable to enable vsynch");
+	}
+
 	glewExperimental = GL_TRUE;
 	glewInit();
+
 	return true;
 }
 
@@ -166,4 +175,9 @@ void Thsan::SDLWindow::destroyContextOpenGL()
 {
 	SDL_GL_DeleteContext(glContext);
 	SDL_DestroyWindow(window);
+}
+
+std::unique_ptr<Thsan::ImGuiHandler> Thsan::SDLWindow::generateImGuiHandler()
+{
+	return std::make_unique<GLimGuiHandlerSDL>(window, glContext);
 }

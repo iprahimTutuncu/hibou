@@ -1,16 +1,16 @@
 #include "pch.h"
-#include "view.h"
+#include "thsan/graphics/view.h"
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 
 namespace Thsan {
 
-    std::shared_ptr<View> View::create(float x, float y, float width, float height, float zoom, float rotation) {
-        return std::make_shared<ViewImpl>(x, y, width, height, zoom, rotation);
+    std::shared_ptr<View> View::create(float x, float y, float width, float height, float maximumDepth, float zoom, float rotation) {
+        return std::make_shared<ViewImpl>(x, y, width, height, maximumDepth, zoom, rotation);
     }
 
-    ViewImpl::ViewImpl(float x, float y, float width, float height, float zoom, float rotation)
-        : position(x, y), size(width, height), zoomFactor(zoom), rotationAngle(rotation) {}
+    ViewImpl::ViewImpl(float x, float y, float width, float height, float maximumDepth, float zoom, float rotation)
+        : position(x, y), size(width, height), maximumDepth(maximumDepth), zoomFactor(zoom), rotationAngle(rotation) {}
 
     void ViewImpl::setPosition(float x, float y) {
         position.x = x;
@@ -30,6 +30,11 @@ namespace Thsan {
         rotationAngle = angle;
     }
 
+    void ViewImpl::setMaximumDepth(float depth)
+    {
+        maximumDepth = depth;
+    }
+
     glm::mat4 ViewImpl::getViewMatrix() const {
         glm::mat4 viewMatrix(1.0f);
 
@@ -46,7 +51,7 @@ namespace Thsan {
 
     glm::mat4 ViewImpl::getProjectionMatrix() const {
         // Adjust the projection matrix
-        return glm::ortho(0.f, size.x, size.y, 0.f, -1000.f, 1000.f);
+        return glm::ortho(0.f, size.x, size.y, 0.f, 0.f, -maximumDepth);
     }
 
 
@@ -75,5 +80,9 @@ namespace Thsan {
     float ViewImpl::getRotation()
     {
         return rotationAngle;
+    }
+    float ViewImpl::getMaximumDepth()
+    {
+        return maximumDepth;
     }
 }

@@ -1,6 +1,6 @@
 
 #include "pch.h"
-#include "keyboard.h"
+#include "thsan/input/keyboard.h"
 #include "thsan/log.h"
 
 #include <SDL.h>

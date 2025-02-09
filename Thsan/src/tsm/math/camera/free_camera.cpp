@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "free_camera.h"
+#include "tsm/math/camera/free_camera.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include <math.h>
 

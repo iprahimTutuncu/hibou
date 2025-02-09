@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "vertex.h"
+#include "thsan/graphics/vertex.h"
 #include "thsan/log.h"
 /*
 namespace Thsan
