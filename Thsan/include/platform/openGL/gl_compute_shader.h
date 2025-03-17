@@ -18,8 +18,18 @@ namespace Thsan {
 		virtual void setInt(const std::string& name, int value) override;
 		virtual void setFloat(const std::string& name, float value) override;
 
+		virtual void setFloatArray(const std::string& name, const float* values, size_t count) override;
+
 		virtual void setMat3(const std::string& name, glm::mat3 value) override;
 		virtual void setMat4(const std::string& name, glm::mat4 value) override;
+
+		virtual void setVec2u(const std::string& name, glm::uvec2 value) override;
+		virtual void setVec3u(const std::string& name, glm::uvec3 value) override;
+		virtual void setVec4u(const std::string& name, glm::uvec4 value) override;
+
+		virtual void setVec2i(const std::string& name, glm::ivec2 value) override;
+		virtual void setVec3i(const std::string& name, glm::ivec3 value) override;
+		virtual void setVec4i(const std::string& name, glm::ivec4 value) override;
 
 		virtual void setVec2(const std::string& name, glm::vec2 value) override;
 		virtual void setVec3(const std::string& name, glm::vec3 value) override;

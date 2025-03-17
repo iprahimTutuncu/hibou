@@ -7,13 +7,37 @@ namespace Thsan {
 
 	enum class THSAN_API TextureFormat
 	{
-		RGBA8,   // Example: GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE
-		R32F,    // Example: GL_R32F, GL_RED, GL_FLOAT
-		RGB16F,  // Example: GL_RGB16F, GL_RGB, GL_HALF_FLOAT
-		RGBA16F,  // Example: GL_RGBA16F, GL_RGBA, GL_HALF_FLOAT
-		RGB32F,  // Example: GL_RGB16F, GL_RGB, GL_FLOAT
-		RGBA32F,  // Example: GL_RGB16F, GL_RGB, GL_FLOAT
-		RGB8, 
+		Unknown,
+		// 8-bit per channel (STBI supported)
+		R8,       // GL_R8, GL_RED, GL_UNSIGNED_BYTE
+		RG8,      // GL_RG8, GL_RG, GL_UNSIGNED_BYTE
+		RGB8,     // GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE
+		RGBA8,    // GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE
+
+		// 16-bit per channel (STBI supported via stbi_load_16)
+		R16,      // GL_R16UI, GL_RED, GL_UNSIGNED_SHORT
+		RG16,     // GL_RG16UI, GL_RG, GL_UNSIGNED_SHORT
+		RGB16,    // GL_RGB16UI, GL_RGB, GL_UNSIGNED_SHORT
+		RGBA16,   // GL_RGBA16UI, GL_RGBA, GL_UNSIGNED_SHORT
+
+		// 16-bit floating-point (GL_HALF_FLOAT)
+		R16F,     // GL_R16F, GL_RED, GL_HALF_FLOAT
+		RG16F,    // GL_RG16F, GL_RG, GL_HALF_FLOAT
+		RGB16F,   // GL_RGB16F, GL_RGB, GL_HALF_FLOAT
+		RGBA16F,  // GL_RGBA16F, GL_RGBA, GL_HALF_FLOAT
+
+		// 32-bit floating-point (HDR images via stbi_loadf)
+		R32F,     // GL_R32F, GL_RED, GL_FLOAT
+		RG32F,    // GL_RG32F, GL_RG, GL_FLOAT
+		RGB32F,   // GL_RGB32F, GL_RGB, GL_FLOAT
+		RGBA32F   // GL_RGBA32F, GL_RGBA, GL_FLOAT
+	};
+
+	enum class THSAN_API TextureBitDepth
+	{
+		BitDepth8,
+		BitDepth16,
+		BitDepth32
 	};
 
 	class THSAN_API Texture {
@@ -27,7 +51,7 @@ namespace Thsan {
 		virtual bool isValid() const = 0;
 		virtual [[nodiscard]] bool generate(const glm::uvec2& size, TextureFormat format, const void* data = nullptr, bool keepRaw = false, bool mipmapped = false, bool smooth = false) = 0;
 
-		virtual bool loadFromFile(const std::filesystem::path& filename, bool keepRaw) = 0;
+		virtual bool loadFromFile(const std::filesystem::path& filename, bool keepRaw, TextureBitDepth bitDepth) = 0;
 		virtual const std::filesystem::path& getFilePath() const = 0;
 
 		// todo

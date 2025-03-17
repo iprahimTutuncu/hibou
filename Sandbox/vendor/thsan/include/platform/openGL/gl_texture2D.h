@@ -5,6 +5,15 @@
 #include <GL/glew.h>
 
 namespace Thsan {
+
+	/*
+	
+		TODO
+			- Dans la méthode generate, quand y'a R16 j'assume qu'on a passé un U16 et je converti, c'est kinda retardé, faut que je change ca, j'ai rush
+			- la valeur "is16bit", autant dans mon context ca passe, pour de quoi qui se veut ré-utilisable, met un enum pour la paix d'esprit (U8, F16, U16,..)
+	
+	*/
+
 	class GLTexture2D : public Texture2D {
 	public:
 		// Inherited via Texture2D
@@ -15,7 +24,7 @@ namespace Thsan {
 
 		virtual [[nodiscard]] bool generate(const glm::uvec2& size, TextureFormat format, const void* data = nullptr, bool keepRaw = false, bool mipmapped = false, bool smooth = false) override;
 
-		virtual bool loadFromFile(const std::filesystem::path& filename, bool keepRaw) override;
+		virtual bool loadFromFile(const std::filesystem::path& filename, bool keepRaw, TextureBitDepth bitDepth) override;
 
 		virtual const std::filesystem::path& getFilePath() const override;
 
@@ -55,6 +64,8 @@ namespace Thsan {
 		bool hasMipmap;
 
 		unsigned char* pixels;
+		unsigned short* pixels16;
+		float* pixels32;
 		float* rawData{nullptr};
 		TextureFormat textureFormat;
 		std::size_t rawSize;

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -38,10 +38,12 @@
     <ClInclude Include="include\thsan\graphics\drawable\tilemap.h" />
     <ClInclude Include="include\thsan\graphics\drawable\tilemap_impl.h" />
     <ClInclude Include="include\thsan\graphics\font.h" />
+    <ClInclude Include="include\thsan\graphics\frame.h" />
     <ClInclude Include="include\thsan\graphics\framebuffer.h" />
     <ClInclude Include="include\thsan\graphics\graphic_api.h" />
     <ClInclude Include="include\thsan\graphics\image.h" />
     <ClInclude Include="include\thsan\graphics\imgui_handler.h" />
+    <ClInclude Include="include\thsan\graphics\layer.h" />
     <ClInclude Include="include\thsan\graphics\light.h" />
     <ClInclude Include="include\thsan\graphics\material.h" />
     <ClInclude Include="include\thsan\graphics\mesh.h" />
@@ -66,10 +68,15 @@
     <ClInclude Include="include\thsan\graphics\transformable.h" />
     <ClInclude Include="include\thsan\graphics\vertex.h" />
     <ClInclude Include="include\thsan\graphics\view.h" />
+    <ClInclude Include="include\thsan\hud\debug_hud\film_editor\editor_panel_debug.h" />
     <ClInclude Include="include\thsan\hud\debug_hud\exemple_panel_debug.h" />
+    <ClInclude Include="include\thsan\hud\debug_hud\film_editor\film_menu_bar_panel_debug.h" />
     <ClInclude Include="include\thsan\hud\debug_hud\menu_bar_panel_debug.h" />
     <ClInclude Include="include\thsan\hud\debug_hud\panel_debug.h" />
+    <ClInclude Include="include\thsan\hud\debug_hud\film_editor\selection_panel_debug.h" />
     <ClInclude Include="include\thsan\hud\debug_hud\terrain_panel_debug.h" />
+    <ClInclude Include="include\thsan\hud\debug_hud\film_editor\timeline_panel_debug.h" />
+    <ClInclude Include="include\thsan\hud\debug_hud\film_editor\view_panel_debug.h" />
     <ClInclude Include="include\thsan\hud\general_hud\button.h" />
     <ClInclude Include="include\thsan\hud\general_hud\gui.h" />
     <ClInclude Include="include\thsan\hud\general_hud\label.h" />
@@ -85,6 +92,7 @@
     <ClInclude Include="include\thsan\options.h" />
     <ClInclude Include="include\thsan\ressource_manager\debugHUD_manager.h" />
     <ClInclude Include="include\thsan\ressource_manager\font_manager.h" />
+    <ClInclude Include="include\thsan\ressource_manager\layer_manager.h" />
     <ClInclude Include="include\thsan\ressource_manager\texture2D_manager.h" />
     <ClInclude Include="include\thsan\state\default_state.h" />
     <ClInclude Include="include\thsan\state\state.h" />
@@ -183,8 +191,13 @@
     <ClInclude Include="src\tsm\math\camera\free_camera.h" />
     <ClInclude Include="src\tsm\math\transform.h" />
     <ClInclude Include="src\tsm\tsm.h" />
+    <ClInclude Include="vendor\ImGuiFD\ImGuiFD.h" />
+    <ClInclude Include="vendor\ImGuiFD\ImGuiFD_internal.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\thsan\graphics\layer.cpp" />
+    <ClCompile Include="src\thsan\ressource_manager\layer_manager.cpp" />
+    <ClCompile Include="src\thsan\graphics\frame.cpp" />
     <ClCompile Include="src\thsan\graphics\renderer\renderer_film.cpp" />
     <ClCompile Include="src\thsan\graphics\post_process_effect\letterbox_post_processor.cpp" />
     <ClCompile Include="src\thsan\graphics\post_process_effect\snowfall_post_processor.cpp" />
@@ -197,9 +210,14 @@
     <ClCompile Include="src\thsan\graphics\post_process.cpp" />
     <ClCompile Include="src\thsan\graphics\renderer\renderer_debug_HUD.cpp" />
     <ClCompile Include="src\thsan\graphics\renderer\renderer_terrain.cpp" />
+    <ClCompile Include="src\thsan\hud\debug_hud\film_editor\editor_panel_debug.cpp" />
     <ClCompile Include="src\thsan\hud\debug_hud\exemple_panel_debug.cpp" />
+    <ClCompile Include="src\thsan\hud\debug_hud\film_editor\film_menu_bar_panel_debug.cpp" />
     <ClCompile Include="src\thsan\hud\debug_hud\menu_bar_panel_debug.cpp" />
+    <ClCompile Include="src\thsan\hud\debug_hud\film_editor\selection_panel_debug.cpp" />
     <ClCompile Include="src\thsan\hud\debug_hud\terrain_panel_debug.cpp" />
+    <ClCompile Include="src\thsan\hud\debug_hud\film_editor\timeline_panel_debug.cpp" />
+    <ClCompile Include="src\thsan\hud\debug_hud\film_editor\view_panel_debug.cpp" />
     <ClCompile Include="src\thsan\hud\general_hud\gui.cpp" />
     <ClCompile Include="src\thsan\hud\general_hud\label.cpp" />
     <ClCompile Include="src\thsan\hud\general_hud\label_button.cpp" />
@@ -245,6 +263,8 @@
     <ClCompile Include="src\thsan\window.cpp" />
     <ClCompile Include="src\tsm\math\camera\free_camera.cpp" />
     <ClCompile Include="src\tsm\math\transform.cpp" />
+    <ClCompile Include="vendor\ImGuiFD\ImGuiFD.cpp" />
+    <ClCompile Include="vendor\ImGuiFD\ImGuiFDNative.cpp" />
     <ClCompile Include="vendor\imgui\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="vendor\imgui\backends\imgui_impl_sdl2.cpp" />
     <ClCompile Include="vendor\imgui\imgui.cpp" />
@@ -252,10 +272,6 @@
     <ClCompile Include="vendor\imgui\imgui_draw.cpp" />
     <ClCompile Include="vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="vendor\imgui\imgui_widgets.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="media\compute_shader\terrainVisibility.cs" />
-    <None Include="media\compute_shader\terrainGenerator.cs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -4,9 +4,10 @@
 #include <memory>
 #include <thsan/graphics/texture.h>
 
-namespace RessourceManager {
-
-    struct TextureDesc {
+namespace RessourceManager
+{
+    struct TextureDesc 
+    {
         glm::uvec2 size;
         Thsan::TextureFormat format;
         const void* data;
@@ -16,7 +17,7 @@ namespace RessourceManager {
     {
     public:
         Texture2DManager() = default;
-        static std::shared_ptr<Thsan::Texture2D> get(const std::string& name, bool keepRaw = false);
+        static std::shared_ptr<Thsan::Texture2D> get(const std::string& name, bool keepRaw = false, Thsan::TextureBitDepth bitDepth = Thsan::TextureBitDepth::BitDepth8);
         static std::shared_ptr<Thsan::Texture2D> create(const std::string& name, TextureDesc desc);
         static void removeUnused();
         static const std::string default_texture_white;

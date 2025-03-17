@@ -87,7 +87,7 @@ namespace Thsan {
 
 	private:
 
-		struct Frame 
+		struct FrameElem 
 		{
 			std::shared_ptr<Texture2D> diffuse;
 			std::shared_ptr<Texture2D> positionMap;
@@ -97,8 +97,8 @@ namespace Thsan {
 		int x{ 0 }, y{ 0 }, w{ 1280 }, h{ 768 };
 		bool isShowEnable{ true };
 
-		std::map<int, Frame> keyframes;
-		std::vector<Frame> frames;     
+		std::map<int, FrameElem> keyframes;
+		std::vector<FrameElem> frames;
 
 		int currentFrame{ -1 };         
 		int totalFrames{ 0 };          
@@ -111,7 +111,7 @@ namespace Thsan {
 
 		std::shared_ptr<ComputeShader> rayTracingShader = nullptr; // Screen-space ray tracing
 
-		void applyRayTracing(Frame& frame);
+		void applyRayTracing(FrameElem& frame);
 	};
 
 }

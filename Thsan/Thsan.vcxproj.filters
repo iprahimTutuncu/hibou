@@ -188,6 +188,16 @@
     <ClInclude Include="include\thsan\graphics\post_process_effect\letterbox_post_processor.h" />
     <ClInclude Include="include\thsan\graphics\renderer\renderer_film.h" />
     <ClInclude Include="include\thsan\graphics\material.h" />
+    <ClInclude Include="include\thsan\graphics\frame.h" />
+    <ClInclude Include="include\thsan\hud\debug_hud\film_editor\editor_panel_debug.h" />
+    <ClInclude Include="include\thsan\hud\debug_hud\film_editor\selection_panel_debug.h" />
+    <ClInclude Include="include\thsan\hud\debug_hud\film_editor\timeline_panel_debug.h" />
+    <ClInclude Include="include\thsan\hud\debug_hud\film_editor\view_panel_debug.h" />
+    <ClInclude Include="include\thsan\hud\debug_hud\film_editor\film_menu_bar_panel_debug.h" />
+    <ClInclude Include="vendor\ImGuiFD\ImGuiFD.h" />
+    <ClInclude Include="vendor\ImGuiFD\ImGuiFD_internal.h" />
+    <ClInclude Include="include\thsan\ressource_manager\layer_manager.h" />
+    <ClInclude Include="include\thsan\graphics\layer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\thsan\game.cpp">
@@ -258,9 +268,15 @@
     <ClCompile Include="src\thsan\graphics\post_process_effect\snowfall_post_processor.cpp" />
     <ClCompile Include="src\thsan\graphics\post_process_effect\letterbox_post_processor.cpp" />
     <ClCompile Include="src\thsan\graphics\renderer\renderer_film.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="media\compute_shader\terrainGenerator.cs" />
-    <None Include="media\compute_shader\terrainVisibility.cs" />
+    <ClCompile Include="src\thsan\graphics\frame.cpp" />
+    <ClCompile Include="src\thsan\hud\debug_hud\film_editor\editor_panel_debug.cpp" />
+    <ClCompile Include="src\thsan\hud\debug_hud\film_editor\selection_panel_debug.cpp" />
+    <ClCompile Include="src\thsan\hud\debug_hud\film_editor\view_panel_debug.cpp" />
+    <ClCompile Include="src\thsan\hud\debug_hud\film_editor\timeline_panel_debug.cpp" />
+    <ClCompile Include="src\thsan\hud\debug_hud\film_editor\film_menu_bar_panel_debug.cpp" />
+    <ClCompile Include="vendor\ImGuiFD\ImGuiFD.cpp" />
+    <ClCompile Include="vendor\ImGuiFD\ImGuiFDNative.cpp" />
+    <ClCompile Include="src\thsan\ressource_manager\layer_manager.cpp" />
+    <ClCompile Include="src\thsan\graphics\layer.cpp" />
   </ItemGroup>
 </Project>

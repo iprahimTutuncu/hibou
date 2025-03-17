@@ -2,8 +2,8 @@
 
 layout(local_size_x = 16, local_size_y = 16) in;
 
-layout(binding = 0, rgba32f) readonly uniform image2D positionMap;
-layout(binding = 1, rgba32f) readonly uniform image2D albedoMap;
+layout(binding = 0, rgba8) readonly uniform image2D positionMap;
+layout(binding = 1, rgba8) readonly uniform image2D albedoMap;
 layout(binding = 2, rgba32f) readonly uniform image2D materialMap;
 layout(binding = 3, rgba32f) writeonly uniform image2D outputImage;
 
@@ -102,10 +102,16 @@ void main()
     ivec2 pixelCoord = ivec2(gl_GlobalInvocationID.xy);
 
     Ray ray = generateRay(vec2(pixelCoord), screenSize);
-    ivec2 texCoord = ivec2(ray.origin.xy);
-    //bool hit = rayHitsGeometry(ray, vec2(pixelCoord));
-    vec3 hitPosition = imageLoad(positionMap, texCoord * int(screenSize)).xyz;
-    bool hit = hitPosition.z > 0.5f;
+
+    ivec2 texCoord = ivec2((ray.origin.xy * 0.5 + 0.5) * screenSize); // Convert from NDC to screen space
+
+    // bool hit = rayHitsGeometry(ray, vec2(pixelCoord));
+
+    ivec2 screenCoord = texCoord; // Ensure this maps correctly to your positionMap
+    vec3 hitPosition = imageLoad(positionMap, screenCoord).xyz;
+
+    bool hit = hitPosition.z > 0.0f;
+
 
     if (hit)
     {
@@ -114,6 +120,11 @@ void main()
     }
     else
     {
-        imageStore(outputImage, pixelCoord, vec4(texCoord,0.0, 1.0));
+        imageStore(outputImage, pixelCoord, vec4(texCoord, 0.0, 1.0));
     }
+
+    imageStore(outputImage, pixelCoord, vec4(screenCoord/screenSize, 0.0, 1.0));
+
+
+
 }

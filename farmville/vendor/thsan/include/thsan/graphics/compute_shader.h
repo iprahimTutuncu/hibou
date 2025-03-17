@@ -23,8 +23,18 @@ namespace Thsan {
         virtual void setInt(const std::string& name, int value) = 0;
         virtual void setFloat(const std::string& name, float value) = 0;
 
+        virtual void setFloatArray(const std::string& name, const float* values, size_t count) = 0;
+
         virtual void setMat3(const std::string& name, glm::mat3 value) = 0;
         virtual void setMat4(const std::string& name, glm::mat4 value) = 0;
+
+        virtual void setVec2u(const std::string& name, glm::uvec2 value) = 0;
+        virtual void setVec3u(const std::string& name, glm::uvec3 value) = 0;
+        virtual void setVec4u(const std::string& name, glm::uvec4 value) = 0;
+
+        virtual void setVec2i(const std::string& name, glm::ivec2 value) = 0;
+        virtual void setVec3i(const std::string& name, glm::ivec3 value) = 0;
+        virtual void setVec4i(const std::string& name, glm::ivec4 value) = 0;
 
         virtual void setVec2(const std::string& name, glm::vec2 value) = 0;
         virtual void setVec3(const std::string& name, glm::vec3 value) = 0;

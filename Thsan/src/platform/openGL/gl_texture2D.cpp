@@ -35,7 +35,8 @@ namespace Thsan {
 
 	bool GLTexture2D::generate(const glm::uvec2& size, TextureFormat format, const void* data, bool keepRaw, bool mipmapped, bool smooth)
 	{
-		if (size.x <= 0 || size.y <= 0){
+		if (size.x <= 0 || size.y <= 0)
+		{
 			TS_CORE_ERROR("Failed to create texture, invalid size ({},{})", size.x, size.y);
 			return false;
 		}
@@ -46,6 +47,7 @@ namespace Thsan {
 		int width = static_cast<GLsizei>(size.x);
 		int height = static_cast<GLsizei>(size.y);
 
+		// Find the format mapping and generate texture
 		auto it = FormatMapping.find(format);
 		if (it != FormatMapping.end()) {
 			auto& [internalFormat, glFormat, glType] = it->second;
@@ -54,6 +56,7 @@ namespace Thsan {
 
 		return true;
 	}
+
 
 	void GLTexture2D::initializeTexture(const glm::uvec2& size)
 	{
@@ -72,31 +75,93 @@ namespace Thsan {
 
 	void GLTexture2D::generateTextureData(GLenum internalFormat, GLenum glFormat, GLenum glType, int width, int height, const void* data, bool mipmapped, bool smooth, bool keepRaw)
 	{
+		// Initial validation checks before doing any OpenGL calls
+		if (width <= 0 || height <= 0) 
+		{
+			TS_CORE_ERROR("Invalid texture size: width = {}, height = {}", width, height);
+			TS_CORE_ASSERT(false, "Texture dimensions must be greater than zero.");
+			return;
+		}
+
+		// Log texture format and type information for debugging
+		TS_CORE_INFO("Generating texture with internalFormat: {}, format: {}, type: {}, width: {}, height: {}",
+			internalFormat, glFormat, glType, width, height);
+
+		// Create texture image
 		GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, glFormat, glType, data));
+		GLenum glError = glGetError();
+		if (glError != GL_NO_ERROR)
+		{
+			TS_CORE_ERROR("OpenGL error after glTexImage2D call. Error code: {}", glError);
+			return;
+		}
+
+		// Set texture wrapping and filtering options
 		GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeated ? GL_REPEAT : GL_CLAMP_TO_EDGE));
 		GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeated ? GL_REPEAT : GL_CLAMP_TO_EDGE));
 		GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, smooth ? GL_LINEAR : GL_NEAREST));
 
+		// Check for any errors after setting parameters
+		glError = glGetError();
+		if (glError != GL_NO_ERROR) {
+			TS_CORE_ERROR("OpenGL error after glTexParameteri call for wrap and filter settings. Error code: {}", glError);
+			return;
+		}
+
+		// Handle mipmaps
 		if (mipmapped) {
 			GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, smooth ? GL_LINEAR_MIPMAP_LINEAR : GL_NEAREST_MIPMAP_NEAREST));
 			GL_CHECK(glGenerateMipmap(GL_TEXTURE_2D));
 			hasMipmap = true;
+			TS_CORE_INFO("Generated mipmaps for texture.");
 		}
 		else {
 			GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, smooth ? GL_LINEAR : GL_NEAREST));
 			hasMipmap = false;
+			TS_CORE_INFO("No mipmaps generated for texture.");
 		}
 
-		numChannels = glFormat == GL_RGBA ? 4 : glFormat == GL_RGB ? 3 : glFormat == GL_RED ? 1 : 0;
-		if (numChannels != 0 && keepRaw)
-			generateRawData(glType, width, height, numChannels, data);
-		
-		else if (numChannels == 0)
-			TS_CORE_WARN("couldn't create raw data from within GLTexture2D::create() method due to numChannels being 0");
-		
+		// Check for OpenGL error after generating mipmaps (or not)
+		glError = glGetError();
+		if (glError != GL_NO_ERROR) {
+			TS_CORE_ERROR("OpenGL error after glGenerateMipmap or glTexParameteri for mipmaps. Error code: {}", glError);
+			return;
+		}
 
+		// Set the number of channels based on the format
+		numChannels = (glFormat == GL_RGBA) ? 4 : (glFormat == GL_RGB) ? 3 : (glFormat == GL_RED) ? 1 : 0;
+
+		if (numChannels == 0) {
+			TS_CORE_WARN("Unknown number of channels for texture format: {}", glFormat);
+		}
+
+		// Log and generate raw data if needed
+		if (numChannels != 0 && keepRaw) {
+			TS_CORE_INFO("Generating raw data for texture (channels: {}).", numChannels);
+			generateRawData(glType, width, height, numChannels, data);
+		}
+		else if (numChannels == 0) {
+			TS_CORE_WARN("Couldn't create raw data due to numChannels being 0.");
+		}
+
+		// Final check to ensure no OpenGL errors
+		glError = glGetError();
+		if (glError != GL_NO_ERROR) {
+			TS_CORE_ERROR("OpenGL error after texture data generation. Error code: {}", glError);
+			return;
+		}
+
+		// Unbind the texture at the end
 		GL_CHECK(glBindTexture(GL_TEXTURE_2D, 0));
+		glError = glGetError();
+		if (glError != GL_NO_ERROR) {
+			TS_CORE_ERROR("OpenGL error after glBindTexture(GL_TEXTURE_2D, 0). Error code: {}", glError);
+			return;
+		}
+
+		TS_CORE_INFO("Texture data generation complete.");
 	}
+
 
 	void GLTexture2D::generateRawData(GLenum glType, int width, int height, int numChannels, const void* data)
 	{
@@ -119,8 +184,54 @@ namespace Thsan {
 		}
 	}
 
+	TextureFormat findTextureFormat(int numChannels, TextureBitDepth bitDepth)
+	{
+		switch (bitDepth)
+		{
+		case TextureBitDepth::BitDepth8:
+			switch (numChannels)
+			{
+			case 1: return TextureFormat::R8;
+			case 2: return TextureFormat::RG8;
+			case 3: return TextureFormat::RGB8;
+			case 4: return TextureFormat::RGBA8;
+			default:
+				TS_CORE_WARN("Unknown numChannels {} for bitDepth 8", numChannels);
+				return TextureFormat::Unknown;
+			}
 
-	bool GLTexture2D::loadFromFile(const std::filesystem::path& filename, bool keepRaw)
+		case TextureBitDepth::BitDepth16:
+			switch (numChannels)
+			{
+			case 1: return TextureFormat::R16;
+			case 2: return TextureFormat::RG16;
+			case 3: return TextureFormat::RGB16;
+			case 4: return TextureFormat::RGBA16;
+			default:
+				TS_CORE_WARN("Unknown numChannels {} for bitDepth 16", numChannels);
+				return TextureFormat::Unknown;
+			}
+
+		case TextureBitDepth::BitDepth32:
+			switch (numChannels)
+			{
+			case 1: return TextureFormat::R32F;
+			case 2: return TextureFormat::RG32F;
+			case 3: return TextureFormat::RGB32F;
+			case 4: return TextureFormat::RGBA32F;
+			default:
+				TS_CORE_WARN("Unknown numChannels {} for bitDepth 32", numChannels);
+				return TextureFormat::Unknown;
+			}
+
+		default:
+			TS_CORE_WARN("Unknown bitDepth {}", static_cast<int>(bitDepth));
+			return TextureFormat::Unknown;
+		}
+	}
+
+
+	bool GLTexture2D::loadFromFile(const std::filesystem::path& filename, bool keepRaw, TextureBitDepth bitDepth)
 	{
 		int width, height, numChannels = 0;
 		const std::string adapter = filename.string();
@@ -128,36 +239,37 @@ namespace Thsan {
 
 		filepath = filename;
 
-		pixels = stbi_load(path, &width, &height, &numChannels, STBI_default);
+		if(bitDepth == TextureBitDepth::BitDepth8)
+			pixels = stbi_load(path, &width, &height, &numChannels, STBI_default);
+		else if(bitDepth == TextureBitDepth::BitDepth16)
+			pixels16 = stbi_load_16(path, &width, &height, &numChannels, STBI_default);
+		else if(bitDepth == TextureBitDepth::BitDepth32)
+			pixels32 = stbi_loadf(path, &width, &height, &numChannels, STBI_default);
 
-		if (!pixels)
+
+		if (!pixels && !pixels16)
 			TS_CORE_ERROR("error: in GLTexture2D::loadFromFile, unable to load from path: {}\n", path);
 
-		Thsan::TextureFormat data_format;
-		switch (numChannels) {
-		case 4:
-			data_format = TextureFormat::RGBA8;
-			break;
-		case 3:
-			data_format = TextureFormat::RGB8;
-			break;
-		case 1:
-			data_format = TextureFormat::R32F;
-			break;
-		default:
-			TS_CORE_ERROR("error: in GLTexture2D::loadFromFile, unsupported data format with {} channel\n", numChannels);
-			break;
-		}
-		
-		if(pixels){
+		Thsan::TextureFormat data_format = findTextureFormat(numChannels, bitDepth);
+
+		if(pixels || pixels16)
+		{
 			size.x = static_cast<uint32_t>(width);
 			size.y = static_cast<uint32_t>(height);
 			this->numChannels = static_cast<uint32_t>(numChannels);
 
-			generate(size, data_format, pixels, keepRaw, true, false);
+			if(bitDepth == TextureBitDepth::BitDepth8)
+				generate(size, data_format, pixels, keepRaw, true, false);
+			else if(bitDepth == TextureBitDepth::BitDepth16)
+				generate(size, data_format, pixels16, keepRaw, false, false);
+			else if(bitDepth == TextureBitDepth::BitDepth32)
+				generate(size, data_format, pixels16, keepRaw, false, false);
+
+
 			TS_CORE_TRACE("load {}-channel texture from {}", numChannels, path);
 		}
-		else {
+		else
+		{
 			TS_CORE_WARN("unable to load texture: {}", path);
 			return false;
 		}
@@ -239,12 +351,29 @@ namespace Thsan {
 	}
 
 	const std::unordered_map<TextureFormat, std::tuple<GLenum, GLenum, GLenum>> GLTexture2D::FormatMapping = {
-	{TextureFormat::RGBA8, {GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE}},
-	{TextureFormat::R32F, {GL_R32F, GL_RED, GL_FLOAT}},
-	{TextureFormat::RGB16F, {GL_RGB16F, GL_RGB, GL_HALF_FLOAT}},
-	{TextureFormat::RGBA16F, {GL_RGBA16F, GL_RGBA, GL_HALF_FLOAT}},
-	{TextureFormat::RGB32F, {GL_RGB32F, GL_RGB, GL_FLOAT}},
-	{TextureFormat::RGBA32F, {GL_RGBA32F, GL_RGBA, GL_FLOAT}},
-	{TextureFormat::RGB8, {GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE}}
+		// 8-bit integer formats (STBI supported)
+		{TextureFormat::R8,    {GL_R8, GL_RED, GL_UNSIGNED_BYTE}},
+		{TextureFormat::RG8,   {GL_RG8, GL_RG, GL_UNSIGNED_BYTE}},
+		{TextureFormat::RGB8,  {GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE}},
+		{TextureFormat::RGBA8, {GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE}},
+
+		// 16-bit integer formats (STBI supported)
+		{TextureFormat::R16,   {GL_R16, GL_RED, GL_UNSIGNED_SHORT}},
+		{TextureFormat::RG16,  {GL_RG16, GL_RG, GL_UNSIGNED_SHORT}},
+		{TextureFormat::RGB16, {GL_RGB16, GL_RGB, GL_UNSIGNED_SHORT}},
+		{TextureFormat::RGBA16,{GL_RGBA16, GL_RGBA, GL_UNSIGNED_SHORT}},
+
+		// 16-bit floating-point (GL_HALF_FLOAT)
+		{TextureFormat::R16F,   {GL_R16F, GL_RED, GL_HALF_FLOAT}},
+		{TextureFormat::RG16F,  {GL_RG16F, GL_RG, GL_HALF_FLOAT}},
+		{TextureFormat::RGB16F, {GL_RGB16F, GL_RGB, GL_HALF_FLOAT}},
+		{TextureFormat::RGBA16F,{GL_RGBA16F, GL_RGBA, GL_HALF_FLOAT}},
+
+		// 32-bit floating-point (HDR images via STBI)
+		{TextureFormat::R32F,   {GL_R32F, GL_RED, GL_FLOAT}},
+		{TextureFormat::RG32F,  {GL_RG32F, GL_RG, GL_FLOAT}},
+		{TextureFormat::RGB32F, {GL_RGB32F, GL_RGB, GL_FLOAT}},
+		{TextureFormat::RGBA32F,{GL_RGBA32F, GL_RGBA, GL_FLOAT}}
 	};
+
 }

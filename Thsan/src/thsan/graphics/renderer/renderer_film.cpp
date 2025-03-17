@@ -144,7 +144,7 @@ namespace Thsan {
 	{
 	}
 
-	void RendererFilmImpl::applyRayTracing(Frame& frame)
+	void RendererFilmImpl::applyRayTracing(FrameElem& frame)
 	{
 		TS_CORE_INFO("APPLYING RAY TRACING TO RESULT");
 	}
