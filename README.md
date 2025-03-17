@@ -1,7 +1,7 @@
 # Renderer OpenGL
 
 Un **renderer OpenGL** que j'utilise pour mes **travaux universitaires** et **projets personnels**.
-L'architecture du renderer ressemble à SFML
+L'abstraction est inspiré d'SFML. Mon but c'était d'avoir pareil mais avec un support de la 3D et des computes shaders
 
 ## Exemples de projets
 
