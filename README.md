@@ -1,3 +1,16 @@
-# learning gl and vk
-juste une petite abstraction pour un renderer qui support gl et vulkan.
-gros work in progress. Le vulkan vient d'être commencé, je continue après la session d'université
+# Renderer OpenGL
+
+Un **renderer OpenGL** que j'utilise pour mes **travaux universitaires** et **projets personnels**.
+L'abstraction est inspiré d'SFML. Mon but c'était d'avoir pareil mais avec un support de la 3D et des computes shaders
+
+## Exemples de projets
+
+### Tool de shading d'animation
+dans le cadre du cours MTI805 - compréhension de l'image, je fais en ce moment un tool qui shade une animation 2D avec comme input une depth et un masque. Loin d'être terminé. Je ferais un update de screenshot dans un mois
+![image](https://github.com/user-attachments/assets/d3be4949-a555-4ecf-ba6b-ab481efe1814)
+
+### Un jeux en fausse 3D
+Inspirer de cette technique de racasting: https://github.com/s-macke/VoxelSpace
+j'implémente un déferred shading
+![image](https://github.com/user-attachments/assets/89cf857a-05af-45a1-bb9b-a32e0c94337e)
+
