@@ -1,6 +1,7 @@
 # Renderer OpenGL
 
-Un **renderer OpenGL** que j'utilise pour mes **travaux universitaires** et **projets personnels**.  
+Un **renderer OpenGL** que j'utilise pour mes **travaux universitaires** et **projets personnels**.
+L'architecture du renderer ressemble à SFML
 
 ## Exemples de projets
 
